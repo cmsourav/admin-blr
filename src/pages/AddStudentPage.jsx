@@ -108,7 +108,7 @@ const AddStudent = () => {
 
   const enquiryFields = [
     "studentId", "applicationStatus", "candidateName", "fatherName", "candidateNumber",
-    "dob", "course", "college", "reference.userName"
+    "dob", "course", "college",
   ];
 
   useEffect(() => {
