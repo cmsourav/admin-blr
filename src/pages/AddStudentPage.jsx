@@ -11,7 +11,13 @@ const validateStudent = (student, enquiryFields) => {
     : Object.keys(student).filter((k) => k !== "createdBy");
 
   requiredFields.forEach((key) => {
-    if (!student[key]) {
+    if (key.startsWith("reference.")) {
+      const field = key.split(".")[1];
+      if (!student.reference?.[field]) {
+        errors[key] = "This field is required.";
+      }
+    } 
+    else if (!student[key]) {
       errors[key] = "This field is required.";
     }
   });
@@ -86,6 +92,10 @@ const AddStudent = () => {
     dob: "", gender: "", adhaarNumber: "", college: "", course: "",
     place: "", amountPaid: "", transactionId: "",
     createdBy: "",
+    reference: {
+      userName: "",
+      consultancyName: ""
+    }
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -98,13 +108,13 @@ const AddStudent = () => {
 
   const enquiryFields = [
     "studentId", "applicationStatus", "candidateName", "fatherName", "candidateNumber",
-    "dob", "course", "college",
+    "dob", "course", "college", "reference.userName"
   ];
 
   useEffect(() => {
     const fetchColleges = async () => {
       try {
-        const snapshot = await getDocs(collection(db, "colleges"));
+        const snapshot = await getDocs(collection(db, "blr-college"));
         const options = snapshot.docs.map(doc => ({
           id: doc.id,
           name: doc.data().name,
@@ -119,15 +129,48 @@ const AddStudent = () => {
     fetchColleges();
   }, []);
 
-  
+  useEffect(() => {
+    const loadUserData = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          setStudent(prev => ({
+            ...prev,
+            reference: {
+              userName: userData.fullName || "",
+              consultancyName: userData.userType === "Freelance Associate" 
+                ? "" 
+                : userData.consultancyName || ""
+            }
+          }));
+        }
+      }
+    };
+
+    loadUserData();
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "college") {
+    if (name.startsWith("reference.")) {
+      const field = name.split(".")[1];
+      setStudent(prev => ({
+        ...prev,
+        reference: {
+          ...prev.reference,
+          [field]: value
+        }
+      }));
+    } 
+    else if (name === "college") {
       const selected = collegeOptions.find((c) => c.name === value);
       setCourseOptions(selected?.courses || []);
       setStudent((prev) => ({ ...prev, course: "", [name]: value }));
-    } else {
+    } 
+    else {
       setStudent((prev) => ({ ...prev, [name]: value }));
     }
 
@@ -176,21 +219,27 @@ const AddStudent = () => {
 
     const isEnquiry = student.applicationStatus === "Enquiry";
     const studentData = isEnquiry
-      ? enquiryFields.reduce((acc, key) => ({ ...acc, [key]: student[key] }), {
-        parentNumber: "", gender: "", place: "",
-        adhaarNumber: "", amountPaid: "", transactionId: ""
-      })
+      ? enquiryFields.reduce((acc, key) => {
+          if (key.startsWith("reference.")) {
+            const field = key.split(".")[1];
+            return {
+              ...acc,
+              reference: {
+                ...(acc.reference || {}),
+                [field]: student.reference?.[field] || ""
+              }
+            };
+          }
+          return { ...acc, [key]: student[key] };
+        }, {
+          parentNumber: "", gender: "", place: "",
+          adhaarNumber: "", amountPaid: "", transactionId: "",
+          reference: student.reference || { userName: "", consultancyName: "" }
+        })
       : { ...student };
 
     studentData.createdAt = Timestamp.now();
-    const userData = userDoc.data();
-    const userName = userData.fullName || "Unknown";
-    const consultancyName = userData.userType === "Freelance Associate" ? "" : userData.consultancyName || "";
-    studentData.reference = {
-      userName,
-      consultancyName,
-    };
-    studentData.createdBy = user.uid
+    studentData.createdBy = user.uid;
 
     try {
       await setDoc(doc(db, "km-blr", student.studentId), studentData);
@@ -202,6 +251,12 @@ const AddStudent = () => {
         dob: "", gender: "", college: "", course: "", fatherName: "", parentNumber: "",
         adhaarNumber: "", amountPaid: "", transactionId: "", place: "",
         createdBy: "",
+        reference: {
+          userName: userDoc.data().fullName || "",
+          consultancyName: userDoc.data().userType === "Freelance Associate" 
+            ? "" 
+            : userDoc.data().consultancyName || ""
+        }
       });
       setCurrentStep(1);
     } catch (err) {
@@ -255,8 +310,7 @@ const AddStudent = () => {
             </button>
           </div>
         )}
-
-        {currentStep === 2 && (
+{currentStep === 2 && (
           <div className="add_student_details_step">
             <div className="add_student_form_grid">
               {/* Application Status */}
@@ -280,7 +334,7 @@ const AddStudent = () => {
 
               {/* Dynamic Fields */}
               {Object.keys(student).map((key) => {
-                if (["studentId", "applicationStatus", "createdBy"].includes(key)) return null;
+                if (["studentId", "applicationStatus", "createdBy", "reference"].includes(key)) return null;
                 if (student.applicationStatus === "Enquiry" && !enquiryFields.includes(key)) return null;
 
                 if (key === "college") {
@@ -327,6 +381,63 @@ const AddStudent = () => {
                       </select>
                       {formErrors[key] && <span className="add_student_error_message">{formErrors[key]}</span>}
                     </div>
+                  );
+                }
+
+                if (key === "transactionId") {
+                  return (
+                    <>
+                      <div className="add_student_input_group" key={key}>
+                        <label htmlFor={key}>
+                          {key.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase())}
+                          {enquiryFields.includes(key) && " *"}
+                        </label>
+                        <input
+                          type="text"
+                          id={key}
+                          name={key}
+                          value={student[key]}
+                          onChange={handleChange}
+                          placeholder={`Enter ${key.replace(/([A-Z])/g, " $1").toLowerCase()}`}
+                          className={formErrors[key] ? "add_student_error" : ""}
+                        />
+                        {formErrors[key] && <span className="add_student_error_message">{formErrors[key]}</span>}
+                      </div>
+                      
+                      {/* Reference Name */}
+                      <div className="add_student_input_group">
+                        <label htmlFor="reference.userName">Reference Name *</label>
+                        <input
+                          type="text"
+                          id="reference.userName"
+                          name="reference.userName"
+                          value={student.reference?.userName || ""}
+                          onChange={handleChange}
+                          placeholder="Enter reference name"
+                          className={formErrors["reference.userName"] ? "add_student_error" : ""}
+                        />
+                        {formErrors["reference.userName"] && (
+                          <span className="add_student_error_message">{formErrors["reference.userName"]}</span>
+                        )}
+                      </div>
+
+                      {/* Consultancy Name */}
+                      <div className="add_student_input_group">
+                        <label htmlFor="reference.consultancyName">Consultancy Name</label>
+                        <input
+                          type="text"
+                          id="reference.consultancyName"
+                          name="reference.consultancyName"
+                          value={student.reference?.consultancyName || ""}
+                          onChange={handleChange}
+                          placeholder="Enter consultancy name"
+                          className={formErrors["reference.consultancyName"] ? "add_student_error" : ""}
+                        />
+                        {formErrors["reference.consultancyName"] && (
+                          <span className="add_student_error_message">{formErrors["reference.consultancyName"]}</span>
+                        )}
+                      </div>
+                    </>
                   );
                 }
 

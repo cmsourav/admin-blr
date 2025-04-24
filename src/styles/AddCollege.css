@@ -1,0 +1,170 @@
+/* AddCollege.css */
+
+:root {
+  --add_college_primary: #d32f2f; /* Dark red */
+  --add_college_primary_hover: #b71c1c; /* Darker red */
+  --add_college_primary_light: #ffcdd2; /* Light red */
+  --add_college_text: #212121;
+  --add_college_light_gray: #f5f5f5;
+  --add_college_border: #e0e0e0;
+  --add_college_error: #c62828; /* Deep red */
+  --add_college_success: #2e7d32; /* Green for contrast */
+  --add_college_transition: all 0.3s ease;
+}
+
+.add_college_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background: #f5f5f5; /* Red gradient */
+}
+
+.add_college_card {
+  width: 100%;
+  max-width: 500px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(211, 47, 47, 0.15); /* Red shadow */
+  padding: 2.5rem;
+  transition: var(--add_college_transition);
+  border-top: 4px solid var(--add_college_primary);
+}
+
+.add_college_card:hover {
+  box-shadow: 0 15px 35px rgba(211, 47, 47, 0.2); /* Stronger red shadow */
+}
+
+.add_college_header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.add_college_title {
+  color: var(--add_college_primary);
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.add_college_subtitle {
+  color: #616161;
+  font-size: 0.95rem;
+}
+
+.add_college_form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.add_college_form_group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.add_college_label {
+  font-size: 0.9rem;
+  color: var(--add_college_text);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.add_college_required {
+  color: var(--add_college_error);
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.add_college_hint {
+  font-weight: 400;
+  color: #757575;
+  font-size: 0.8rem;
+  margin-left: 0.3rem;
+}
+
+.add_college_input {
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--add_college_border);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: var(--add_college_transition);
+  background-color: var(--add_college_light_gray);
+}
+
+.add_college_input:focus {
+  outline: none;
+  border-color: var(--add_college_primary);
+  box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.15);
+  background-color: white;
+}
+
+.add_college_input::placeholder {
+  color: #9e9e9e;
+}
+
+.add_college_submit_btn {
+  margin-top: 0.5rem;
+  padding: 0.9rem 1.5rem;
+  background-color: var(--add_college_primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--add_college_transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.add_college_submit_btn:hover {
+  background-color: var(--add_college_primary_hover);
+  transform: translateY(-2px);
+}
+
+.add_college_submit_btn:active {
+  transform: translateY(0);
+}
+
+.add_college_submit_btn.add_college_submitting {
+  background-color: var(--add_college_primary_hover);
+  pointer-events: none;
+}
+
+.add_college_icon {
+  width: 20px;
+  height: 20px;
+}
+
+.add_college_spinner {
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: add_college_spin 1s ease-in-out infinite;
+}
+
+@keyframes add_college_spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .add_college_card {
+    padding: 1.5rem;
+  }
+  
+  .add_college_title {
+    font-size: 1.5rem;
+  }
+}

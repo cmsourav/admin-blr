@@ -72,6 +72,22 @@ const MainLayout = ({ children }) => {
             </svg>
             <span className="nav-text">Review Application</span>
           </Link>
+          <Link
+            to="/add-college"
+            className={`nav-item ${location.pathname === "/add-college" ? "active" : ""}`}>
+<svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+  {/* Graduation cap */}
+  <path d="M22 10v6l-10 3-10-3v-6l10 3z" />
+  <path d="M12 13l10-3" />
+  
+  {/* Plus circle */}
+  <circle cx="18" cy="5" r="3" />
+  <path d="M18 3v4" />
+  <path d="M16 5h4" />
+</svg>
+
+            <span className="nav-text">Add College</span>
+          </Link>
         </nav>
 
       </aside>

@@ -8,6 +8,7 @@ import StudentList from "./pages/StudentListPage";
 import Dashboard from "./pages/Dashboard";
 import MainLayout from "./pages/MainLayout";
 import SignupPage from "./pages/SignupPage";
+import CollegePage from "./pages/AddCollege";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/dashboard" element={<MainLayout><Dashboard /></MainLayout>} />
         <Route path="/add-student" element={<MainLayout><AddStudent /></MainLayout>} />
         <Route path="/student-list" element={<MainLayout><StudentList /></MainLayout>} />
+        <Route path="/add-college" element={<MainLayout><CollegePage  /></MainLayout>} />
       </Routes>
     </Router>
   );
