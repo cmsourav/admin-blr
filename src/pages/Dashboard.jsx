@@ -215,8 +215,11 @@ const Dashboard = () => {
                         <td>{indexOfFirstStudent + index + 1}</td> {/* Row number */}
                         <td>{s.candidateName}</td>
                         <td>{s.course}</td>
-                        {/* <td>
-                        </td> */}
+                        <td>
+                          {/* <span className={`status-badge ${s.applicationStatus.toLowerCase()}`}>
+                            {s.applicationStatus}
+                          </span> */}
+                        </td>
                         <td>
                           <button
                             className="view-btn"
