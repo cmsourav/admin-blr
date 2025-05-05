@@ -1,401 +1,699 @@
-/* Modern UI Styles with add_student_ prefix */
-.add_student_container {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  padding-bottom: 5rem;
+/* AddStudent.css - Black & Red Theme */
+
+.modern-enrollment-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #e0e0e0;
+  background-color: #121212;
 }
 
-.add_student_header {
-  text-align: center;
-  margin-bottom: 2rem;
+.modern-header {
+  position: relative;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
 }
 
-.add_student_header h2 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #2d3748;
-  margin-bottom: 0.5rem;
+.modern-header-content {
+  padding: 0 15px;
 }
 
-.add_student_header p {
-  color: #718096;
+.modern-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.modern-subtitle {
   font-size: 1rem;
+  color: #a0a0a0;
+  margin: 0;
 }
 
-/* Stepper */
-.add_student_stepper {
+.modern-header-accent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  width: 60px;
+  background: linear-gradient(90deg, #ff0000, #990000);
+  border-radius: 2px;
+}
+
+/* Stepper Styles */
+.modern-stepper-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: 40px;
   position: relative;
 }
 
-.add_student_step {
+.modern-step {
   display: flex;
   flex-direction: column;
   align-items: center;
   z-index: 2;
 }
 
-.add_student_step_number {
-  width: 36px;
-  height: 36px;
+.modern-step-circle {
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background-color: #e2e8f0;
-  color: #64748b;
+  background-color: #333333;
+  color: #a0a0a0;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
+  margin-bottom: 8px;
+  border: 3px solid #333333;
   transition: all 0.3s ease;
 }
 
-.add_student_step.add_student_active .add_student_step_number {
-  background-color: #fd1317;
+.modern-step.active .modern-step-circle {
+  background-color: #ff0000;
   color: white;
+  border-color: #ff0000;
 }
 
-.add_student_step_label {
-  margin-top: 8px;
-  font-size: 0.875rem;
-  color: #64748b;
+.modern-step-label {
+  font-size: 0.9rem;
+  color: #a0a0a0;
   font-weight: 500;
 }
 
-.add_student_step.add_student_active .add_student_step_label {
-  color: #64748b;
+.modern-step.active .modern-step-label {
+  color: #ff0000;
   font-weight: 600;
 }
 
-.add_student_step_connector {
-  height: 2px;
-  background-color: #e2e8f0;
+.modern-step-connector {
+  height: 3px;
+  background-color: #333333;
   flex-grow: 1;
   max-width: 100px;
-  margin: 0 -10px;
+  margin: 0 10px;
+  transition: background-color 0.3s ease;
+}
+
+.modern-step-connector.active {
+  background-color: #ff0000;
 }
 
 /* Form Styles */
-.add_student_form {
-  width: 100%;
+.modern-enrollment-form {
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+  padding: 30px;
+  margin-bottom: 40px;
 }
 
-.add_student_verify_step {
-  max-width: 400px;
+.modern-verify-step {
+  max-width: 500px;
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  text-align: center;
 }
 
-.add_student_details_step {
-  width: 100%;
+.modern-input-group {
+  margin-bottom: 20px;
 }
 
-.add_student_form_grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.add_student_input_group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.add_student_input_group label {
-  font-size: 0.875rem;
+.modern-input-label {
+  display: block;
+  margin-bottom: 8px;
   font-weight: 500;
-  color: #4a5568;
+  color: #e0e0e0;
+  text-align: left;
 }
 
-.add_student_input_group input,
-.add_student_input_group select {
-  padding: 0.75rem 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 0.9375rem;
-  transition: all 0.2s ease;
-  background-color: #f8fafc;
+.modern-required {
+  color: #ff3333;
 }
 
-.add_student_input_group input:focus,
-.add_student_input_group select:focus {
-  outline: none;
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-}
-
-.add_student_input_group input.add_student_error,
-.add_student_input_group select.add_student_error {
-  border-color: #ef4444;
-}
-
-.add_student_error_message {
-  color: #ef4444;
-  font-size: 0.75rem;
-  margin-top: 0.25rem;
-}
-
-/* Buttons */
-.add_student_actions_container {
-  position: relative;
+.modern-input {
   width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #444;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  background-color: #2a2a2a;
+  color: #e0e0e0;
 }
 
-.add_student_form_actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-  margin-top: 1.5rem;
+.modern-input:focus {
+  outline: none;
+  border-color: #ff0000;
+  box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.2);
 }
 
-.add_student_primary_btn {
-  padding: 0.75rem 1.5rem;
-  background-color: #fd1317;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.9375rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
+.modern-input.error {
+  border-color: #ff3333;
+}
+
+.modern-input.error:focus {
+  box-shadow: 0 0 0 3px rgba(255, 51, 51, 0.2);
+}
+
+.modern-error-message {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+  color: #ff3333;
+  font-size: 0.85rem;
+  margin-top: 5px;
 }
 
-.add_student_primary_btn:hover {
-  background-color: #fd1317;
+.modern-error-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
 }
 
-.add_student_secondary_btn {
-  padding: 0.75rem 1.5rem;
-  background-color: #f1f5f9;
-  color: #6c757d;
+/* Button Styles */
+.modern-primary-btn {
+  background-color: #ff0000;
+  color: white;
   border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.9375rem;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s, transform 0.2s;
+  margin-top: 10px;
 }
 
-.add_student_secondary_btn:hover {
-  background-color: #e2e8f0;
+.modern-primary-btn:hover {
+  background-color: #cc0000;
+  transform: translateY(-1px);
+}
+
+.modern-primary-btn:active {
+  transform: translateY(0);
+}
+
+.modern-secondary-btn {
+  background-color: #333333;
+  color: #a0a0a0;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s, transform 0.2s;
+  margin-right: 15px;
+}
+
+.modern-secondary-btn:hover {
+  background-color: #444444;
+  transform: translateY(-1px);
+}
+
+.modern-secondary-btn:active {
+  transform: translateY(0);
+}
+
+.modern-btn-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+/* Form Sections */
+.modern-form-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.modern-form-section {
+  background-color: #252525;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.modern-section-header {
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #444;
+}
+
+.modern-section-title {
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  color: #ffffff;
+  margin: 0;
+}
+
+.modern-section-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+  color: #ff0000;
+}
+
+.modern-section-divider {
+  height: 2px;
+  background: linear-gradient(90deg, #ff0000, transparent);
+  margin-top: 8px;
+  opacity: 0.7;
+}
+
+/* Input Grid */
+.modern-input-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* Textarea */
+.modern-textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #444;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+  background-color: #2a2a2a;
+  color: #e0e0e0;
+}
+
+.modern-textarea:focus {
+  outline: none;
+  border-color: #ff0000;
+  box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.2);
+}
+
+/* Form Actions */
+.modern-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #444;
 }
 
 /* Spinner */
-.add_student_spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  border-top-color: white;
-  animation: spin 1s ease-in-out infinite;
+.modern-spinner {
+  animation: rotate 1.5s linear infinite;
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+.modern-spinner .path {
+  stroke: #ffffff;
+  stroke-linecap: round;
+  animation: dash 1.5s ease-in-out infinite;
 }
 
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+
+/* Modal Styles */
 .add_student_modal_overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  backdrop-filter: blur(5px);
-  animation: add_student_fadeIn 0.3s ease-out;
 }
 
 .add_student_modal_content {
-  background-color: white;
-  border-radius: 16px;
-  width: 100%;
-  max-width: 400px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  background-color: #252525;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
   overflow: hidden;
-  transform: translateY(0);
-  animation: add_student_slideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  border: 1px solid #444;
 }
 
 .add_student_modal_header {
+  padding: 20px;
+  background-color: #ff0000;
+  color: white;
   display: flex;
   align-items: center;
-  padding: 1.5rem;
-  background: linear-gradient(135deg, #fd1317 0%, #ff7a18 100%);
-  color: white;
 }
 
 .add_student_modal_icon {
-  width: 24px;
-  height: 24px;
-  margin-right: 12px;
+  width: 32px;
+  height: 32px;
+  margin-right: 15px;
 }
 
 .add_student_modal_title {
   margin: 0;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: white;
+  font-size: 1.3rem;
 }
 
 .add_student_modal_body {
-  padding: 1.5rem;
+  padding: 25px 20px;
 }
 
 .add_student_modal_text {
   margin: 0;
-  color: #4a5568;
-  line-height: 1.6;
   font-size: 1rem;
+  line-height: 1.5;
+  color: #e0e0e0;
 }
 
 .add_student_modal_footer {
-  padding: 0 1.5rem 1.5rem 1.5rem;
+  padding: 15px 20px;
   display: flex;
   justify-content: flex-end;
+  background-color: #2a2a2a;
 }
 
 .add_student_modal_button {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.75rem 1.25rem;
-  background-color: #fd1317;
+  padding: 8px 16px;
+  background-color: #ff0000;
   color: white;
   border: none;
-  border-radius: 8px;
-  font-weight: 500;
-  font-size: 0.9375rem;
+  border-radius: 4px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  transition: background-color 0.3s;
 }
 
 .add_student_modal_button:hover {
-  background-color: #fd1317;
-  transform: translateY(-1px);
+  background-color: #cc0000;
 }
 
-.add_student_modal_button_icon {
-  width: 18px;
-  height: 18px;
-  margin-left: 8px;
-}
+/* Responsive Adjustments */
+/* Mobile-First Enhancements - Black & Red Theme */
 
-/* Animations */
-@keyframes add_student_fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes add_student_slideUp {
-  from { 
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to { 
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-/* Responsive Design */
 @media (max-width: 768px) {
-  .add_student_container {
-    padding: 1.5rem;
-    margin: 1rem;
-    padding-bottom: 6rem;
+  .modern-enrollment-container {
+    padding: 15px;
   }
 
-  .add_student_form_grid {
-    grid-template-columns: 1fr;
+  .modern-header {
+    margin-bottom: 20px;
+    text-align: center;
   }
 
-  .add_student_stepper {
-    margin-bottom: 1.5rem;
+  .modern-title {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
   }
 
-  .add_student_step_connector {
+  .modern-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .modern-header-accent {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+  }
+
+  /* Stepper Improvements */
+  .modern-stepper-container {
+    margin-bottom: 30px;
+  }
+
+  .modern-step-circle {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+  }
+
+  .modern-step-label {
+    font-size: 0.8rem;
+  }
+
+  .modern-step-connector {
     max-width: 60px;
   }
 
-  .add_student_actions_container {
-    padding-top: 1rem;
-    margin-top: auto;
+  /* Form Enhancements */
+  .modern-enrollment-form {
+    padding: 20px 15px;
+    border-radius: 10px;
   }
 
-  .add_student_form_actions {
-    position: sticky;
-    bottom: 0;
-    background: white;
-    padding: 1rem 0;
-    margin-top: 1.5rem;
-    margin-bottom: 0;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-    z-index: 10;
-    flex-direction: column-reverse;
-    gap: 0.75rem;
+  .modern-input-grid {
+    gap: 15px;
   }
 
-  .add_student_primary_btn,
-  .add_student_secondary_btn {
+  .modern-input-group {
+    margin-bottom: 15px;
+  }
+
+  .modern-input {
+    padding: 14px 15px;
+    font-size: 0.95rem;
+  }
+
+  /* Section Styling */
+  .modern-form-section {
+    padding: 18px;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .modern-form-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, #ff0000, #990000);
+  }
+
+  .modern-section-header {
+    margin-bottom: 15px;
+    padding-left: 10px;
+  }
+
+  .modern-section-title {
+    font-size: 1.1rem;
+  }
+
+  .modern-section-icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* Button Enhancements */
+  .modern-form-actions {
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 25px;
+  }
+
+  .modern-primary-btn, 
+  .modern-secondary-btn {
     width: 100%;
-    margin-bottom: 0.5rem;
+    padding: 14px;
+    font-size: 1rem;
+    border-radius: 8px;
+  }
+
+  .modern-primary-btn {
+    order: 1;
+    background: linear-gradient(135deg, #ff0000, #cc0000);
+    box-shadow: 0 3px 6px rgba(255, 0, 0, 0.2);
+  }
+
+  .modern-secondary-btn {
+    order: 2;
+    margin-right: 0;
+    background: #333;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Input Focus Effects */
+  .modern-input:focus {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.3);
+  }
+
+  /* Floating Labels Effect */
+  .modern-input-group {
+    position: relative;
+  }
+
+  .modern-input-label {
+    position: absolute;
+    left: 15px;
+    top: 14px;
+    padding: 0 5px;
+    background-color: #252525;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    color: #a0a0a0;
+    font-size: 0.95rem;
+  }
+
+  .modern-input:focus + .modern-input-label,
+  .modern-input:not(:placeholder-shown) + .modern-input-label {
+    top: -10px;
+    left: 10px;
+    font-size: 0.8rem;
+    color: #ff0000;
+    background-color: #252525;
+  }
+
+  /* Select Dropdown Arrow */
+  select.modern-input {
+    background-position: right 12px center;
+  }
+
+  /* Modal Enhancements */
+  .add_student_modal_content {
+    width: 95%;
+    border-radius: 12px;
+  }
+
+  .add_student_modal_header {
+    padding: 18px;
+  }
+
+  .add_student_modal_button {
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+
+  /* Animation Enhancements */
+  .modern-primary-btn, 
+  .modern-secondary-btn {
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  .modern-primary-btn:active {
+    transform: scale(0.98);
+  }
+
+  /* Error Message Styling */
+  .modern-error-message {
+    padding: 8px;
+    background-color: rgba(255, 51, 51, 0.1);
+    border-radius: 4px;
+    margin-top: 8px;
+  }
+
+  /* Special Effects for Active Elements */
+  .modern-step.active .modern-step-circle {
+    box-shadow: 0 0 0 4px rgba(255, 0, 0, 0.3);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.4);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+    }
   }
 }
 
+/* Additional Mobile-Specific Enhancements */
 @media (max-width: 480px) {
-  .add_student_header h2 {
-    font-size: 1.5rem;
+  .modern-title {
+    font-size: 1.6rem;
   }
 
-  .add_student_header p {
-    font-size: 0.875rem;
+  .modern-input {
+    padding: 16px 15px;
   }
 
-  .add_student_step_number {
-    width: 30px;
-    height: 30px;
-    font-size: 0.875rem;
+  .modern-form-section {
+    padding: 15px 12px;
   }
 
-  .add_student_step_label {
+  .modern-section-title {
+    font-size: 1rem;
+  }
+
+  /* Floating labels adjustment */
+  .modern-input:focus + .modern-input-label,
+  .modern-input:not(:placeholder-shown) + .modern-input-label {
+    top: -8px;
     font-size: 0.75rem;
   }
-  
-  .add_student_modal_content {
-    margin: 0 1rem;
+
+  /* Button tap effects */
+  .modern-primary-btn:active {
+    background: linear-gradient(135deg, #cc0000, #990000);
   }
-  
-  .add_student_modal_header {
-    padding: 1rem;
+
+  .modern-secondary-btn:active {
+    background: #444;
   }
-  
-  .add_student_modal_body {
-    padding: 1rem;
+
+  /* Input placeholder styling */
+  .modern-input::placeholder {
+    color: transparent;
   }
-  
-  .add_student_modal_footer {
-    padding: 0 1rem 1rem 1rem;
+
+  .modern-input:focus::placeholder {
+    color: #666;
   }
 }
 
-@media (max-width: 400px) {
-  .add_student_container {
-    padding-bottom: 7rem;
-  }
+/* Select Dropdown Styling */
+select.modern-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a0a0a0'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 20px;
+  padding-right: 35px;
+}
+
+/* Date Input Styling */
+input[type="date"].modern-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a0a0a0'%3e%3cpath d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM9 10H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 20px;
+  padding-right: 35px;
 }
