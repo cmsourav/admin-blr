@@ -100,7 +100,6 @@ const AddStudent = () => {
     candidateEmail: "",
     college: "",
     course: "",
-    // Personal Details
     whatsappNumber: "",
     dob: "",
     gender: "",
@@ -109,13 +108,11 @@ const AddStudent = () => {
     alternativeNumber: "",
     adhaarNumber: "",
     place: "",
-    // Academic Details
     plusTwoRegNumber: "",
     plusTwoSchoolName: "",
     plusTwoSchoolPlace: "",
     lastQualification: "",
     lastQualificationMarks: "",
-    // Payment Details
     totalAmountPaid: "",
     paidToCollege: "",
     paymentRemark: "",
@@ -164,10 +161,11 @@ const AddStudent = () => {
           setStudent(prev => ({
             ...prev,
             reference: {
-              userName: userData.fullName || "",
+              ...prev.reference,
               consultancyName: userData.userType === "Freelance Associate"
                 ? ""
                 : userData.consultancyName || ""
+              // Removed automatic setting of userName
             }
           }));
         }
@@ -278,10 +276,12 @@ const AddStudent = () => {
         paymentRemark: "",
         createdBy: "",
         reference: {
-          userName: userDoc.data().fullName || "",
+          userName: "",
           consultancyName: userDoc.data().userType === "Freelance Associate"
             ? ""
-            : userDoc.data().consultancyName || ""
+            : userDoc.data().consultancyName || "",
+          totalSC: "",
+          committedSC: ""
         }
       });
       setCurrentStep(1);
@@ -292,7 +292,7 @@ const AddStudent = () => {
     }
   };
 
-   return (
+  return (
     <div className="modern-enrollment-container">
       <div className="modern-header">
         <div className="modern-header-content">

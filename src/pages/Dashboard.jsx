@@ -311,9 +311,9 @@ const Dashboard = () => {
       
       <div className="modal-header">
         <h3>Student Details</h3>
-        <span className={`status-badge ${selectedStudent.applicationStatus.toLowerCase()}`}>
+        {/* <span className={`status-badge ${selectedStudent.applicationStatus.toLowerCase()}`}>
           {selectedStudent.applicationStatus}
-        </span>
+        </span> */}
       </div>
       
       <div className="modal-body">
