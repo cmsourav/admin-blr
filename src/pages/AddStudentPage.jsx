@@ -117,6 +117,7 @@ const AddStudent = () => {
     paidToCollege: "",
     paymentRemark: "",
     createdBy: "",
+    dateOfAdmission: "",
     reference: {
       userName: "",
       consultancyName: "",
@@ -275,6 +276,7 @@ const AddStudent = () => {
         paidToCollege: "",
         paymentRemark: "",
         createdBy: "",
+        dateOfAdmission: "",
         reference: {
           userName: "",
           consultancyName: userDoc.data().userType === "Freelance Associate"
@@ -465,6 +467,20 @@ const AddStudent = () => {
                     {formErrors.course && (
                       <span className="modern-error-message">{formErrors.course}</span>
                     )}
+                  </div>
+                  
+                  <div className="modern-input-group">
+                    <label htmlFor="dateOfAdmission" className="modern-input-label">
+                      Date of Admission
+                    </label>
+                    <input
+                      type="date"
+                      id="dateOfAdmission"
+                      name="dateOfAdmission"
+                      value={student.dateOfAdmission}
+                      onChange={handleChange}
+                      className="modern-input"
+                    />
                   </div>
                 </div>
               </div>
