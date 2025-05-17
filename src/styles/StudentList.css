@@ -568,10 +568,6 @@ h1, h2, h3, h4 {
   border-color: var(--primary-color);
 }
 
-.button--primary:hover {
-  background-color: var(--secondary-color);
-  border-color: var(--secondary-color);
-}
 
 .button--outline {
   background-color: transparent;

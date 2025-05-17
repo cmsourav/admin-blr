@@ -32,16 +32,16 @@ const StudentList = () => {
     const fetchStudents = async (user) => {
       try {
         setIsLoading(true);
-        const q = query(collection(db, "km-blr")); 
+        const q = query(collection(db, "km-blr"));
         const snapshot = await getDocs(q);
         const list = snapshot.docs.map((docSnap) => {
           const data = docSnap.data();
           const createdAt = data.createdAt?.toDate?.();
           const formattedDate = createdAt
-          ? `${createdAt.getDate().toString().padStart(2, "0")}-${(createdAt.getMonth() + 1)
+            ? `${createdAt.getDate().toString().padStart(2, "0")}-${(createdAt.getMonth() + 1)
               .toString()
               .padStart(2, "0")}-${createdAt.getFullYear()}`
-          : data.createdAt || "N/A";
+            : data.createdAt || "N/A";
           const amount = Number(data.amountPaid) || 0;
           return {
             id: docSnap.id,
@@ -92,8 +92,10 @@ const StudentList = () => {
         s.candidateName?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-    if (statusFilter) {
-      filtered = filtered.filter((s) => s.applicationStatus === statusFilter);
+    if (statusFilter === "enrolled") {
+      filtered = filtered.filter((s) => s.dateOfAdmission);
+    } else if (statusFilter === "enquiry") {
+      filtered = filtered.filter((s) => !s.dateOfAdmission);
     }
     if (collegeFilter) {
       filtered = filtered.filter((s) => s.college === collegeFilter);
@@ -130,8 +132,8 @@ const StudentList = () => {
         <div className="student-card__info">
           <h3 className="student-card__name">{student.candidateName}</h3>
           <p className="student-card__course">{student.course}</p>
-          <span className={`student-card__status student-card__status--${student.applicationStatus === "Enroll" ? "enrolled" : "enquiry"}`}>
-            {student.applicationStatus === "Enroll" ? "Enrolled" : student.applicationStatus}
+          <span className={`student-card__status student-card__status--${student.dateOfAdmission ? "enrolled" : "enquiry"}`}>
+            {student.dateOfAdmission ? "Enrolled" : "Enquiry"}
           </span>
         </div>
       </div>
@@ -170,7 +172,7 @@ const StudentList = () => {
 
   // Edit Modal Content
   const EditModal = ({ selectedStudent, setShowEditModal, isSaving }) => {
-    if (!selectedStudent) return null; 
+    if (!selectedStudent) return null;
 
     const [localStudent, setLocalStudent] = useState(selectedStudent);
     const [collegeOptions, setCollegeOptions] = useState([]);
@@ -187,7 +189,7 @@ const StudentList = () => {
             courses: doc.data().courses || [],
           }));
           setCollegeOptions(options);
-          
+
           // If the student's college exists in options, set its courses
           if (selectedStudent.college) {
             const selectedCollege = options.find(c => c.name === selectedStudent.college);
@@ -220,6 +222,15 @@ const StudentList = () => {
           course: "", // Reset course when college changes
           [name]: value
         }));
+      } else if (name.startsWith("reference.")) {
+        const refField = name.split(".")[1];
+        setLocalStudent(prev => ({
+          ...prev,
+          reference: {
+            ...prev.reference,
+            [refField]: value
+          }
+        }));
       } else {
         setLocalStudent(prev => ({
           ...prev,
@@ -232,11 +243,7 @@ const StudentList = () => {
       const value = parseFloat(e.target.value) || 0;
       setLocalStudent(prev => ({
         ...prev,
-        rawAmount: value,
-        amountPaid: new Intl.NumberFormat("en-IN", {
-          style: "currency",
-          currency: "INR",
-        }).format(value)
+        totalAmountPaid: value
       }));
     };
 
@@ -244,18 +251,14 @@ const StudentList = () => {
       setIsSaving(true);
       try {
         const studentRef = doc(db, "km-blr", localStudent.id);
-        const updateData = {
-          ...localStudent,
-          amountPaid: localStudent.rawAmount || 0
-        };
-        await updateDoc(studentRef, updateData);
+        await updateDoc(studentRef, localStudent);
         setStudents((prev) =>
           prev.map((s) =>
             s.id === localStudent.id ? localStudent : s
           )
         );
         setShowEditModal(false);
-      } catch(err) {
+      } catch (err) {
         console.log(err)
         alert("Failed to update student.");
       } finally {
@@ -287,18 +290,16 @@ const StudentList = () => {
           <div className="modal__content">
             <div className="form-section">
               <div className="form-grid">
+                {/* Basic Information */}
                 <div className="form-group">
-                  <label className="form-group__label">Application Status</label>
-                  <select
+                  <label className="form-group__label">Student ID</label>
+                  <input
                     className="form-outlined-input"
-                    name="applicationStatus"
-                    value={localStudent.applicationStatus}
+                    name="studentId"
+                    value={localStudent.studentId || ""}
                     onChange={handleEditChange}
-                    required
-                  >
-                    <option value="Enquiry">Enquiry</option>
-                    <option value="Enroll">Enroll</option>
-                  </select>
+                    placeholder="Enter student ID"
+                  />
                 </div>
 
                 <div className="form-group">
@@ -306,7 +307,7 @@ const StudentList = () => {
                   <input
                     className="form-outlined-input"
                     name="candidateName"
-                    value={localStudent.candidateName}
+                    value={localStudent.candidateName || ""}
                     onChange={handleEditChange}
                     required
                     placeholder="Enter full name"
@@ -318,7 +319,7 @@ const StudentList = () => {
                   <input
                     className="form-outlined-input"
                     name="candidateNumber"
-                    value={localStudent.candidateNumber}
+                    value={localStudent.candidateNumber || ""}
                     onChange={handleEditChange}
                     type="tel"
                     pattern="[0-9]{10}"
@@ -328,13 +329,27 @@ const StudentList = () => {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-group__label">Father's Name</label>
+                  <label className="form-group__label">Email</label>
                   <input
                     className="form-outlined-input"
-                    name="fatherName"
-                    value={localStudent.fatherName || ""}
+                    name="candidateEmail"
+                    value={localStudent.candidateEmail || ""}
                     onChange={handleEditChange}
-                    placeholder="Enter father's name"
+                    type="email"
+                    placeholder="Enter email"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-group__label">WhatsApp Number</label>
+                  <input
+                    className="form-outlined-input"
+                    name="whatsappNumber"
+                    value={localStudent.whatsappNumber || ""}
+                    onChange={handleEditChange}
+                    type="tel"
+                    pattern="[0-9]{10}"
+                    placeholder="Enter WhatsApp number"
                   />
                 </div>
 
@@ -344,18 +359,33 @@ const StudentList = () => {
                     type="date"
                     className="form-outlined-input"
                     name="dob"
-                    value={localStudent.dob}
+                    value={localStudent.dob || ""}
                     onChange={handleEditChange}
                   />
                 </div>
 
-                {/* College Dropdown */}
+                <div className="form-group">
+                  <label className="form-group__label">Gender</label>
+                  <select
+                    className="form-outlined-input"
+                    name="gender"
+                    value={localStudent.gender || ""}
+                    onChange={handleEditChange}
+                  >
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                {/* College Information */}
                 <div className="form-group">
                   <label className="form-group__label">College</label>
                   <select
                     className="form-outlined-input"
                     name="college"
-                    value={localStudent.college}
+                    value={localStudent.college || ""}
                     onChange={handleEditChange}
                     required
                   >
@@ -368,13 +398,12 @@ const StudentList = () => {
                   </select>
                 </div>
 
-                {/* Course Dropdown */}
                 <div className="form-group">
                   <label className="form-group__label">Course</label>
                   <select
                     className="form-outlined-input"
                     name="course"
-                    value={localStudent.course}
+                    value={localStudent.course || ""}
                     onChange={handleEditChange}
                     required
                     disabled={!localStudent.college}
@@ -393,84 +422,217 @@ const StudentList = () => {
                   </select>
                 </div>
 
-                {localStudent.applicationStatus === "Enroll" && (
-                  <>
-                    <div className="form-group">
-                      <label className="form-group__label">Gender</label>
-                      <select
-                        className="form-outlined-input"
-                        name="gender"
-                        value={localStudent.gender || ""}
-                        onChange={handleEditChange}
-                      >
-                        <option value="">Select Gender</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="Other">Other</option>
-                      </select>
-                    </div>
+                <div className="form-group">
+                  <label className="form-group__label">Date of Admission</label>
+                  <input
+                    type="date"
+                    className="form-outlined-input"
+                    name="dateOfAdmission"
+                    value={localStudent.dateOfAdmission || ""}
+                    onChange={handleEditChange}
+                  />
+                </div>
 
-                    <div className="form-group">
-                      <label className="form-group__label">Parent's Phone</label>
-                      <input
-                        className="form-outlined-input"
-                        name="parentNumber"
-                        value={localStudent.parentNumber || ""}
-                        onChange={handleEditChange}
-                        type="tel"
-                        pattern="[0-9]{10}"
-                        placeholder="Enter parent's phone number"
-                      />
-                    </div>
+                {/* Family Information */}
+                <div className="form-group">
+                  <label className="form-group__label">Father's Name</label>
+                  <input
+                    className="form-outlined-input"
+                    name="fatherName"
+                    value={localStudent.fatherName || ""}
+                    onChange={handleEditChange}
+                    placeholder="Enter father's name"
+                  />
+                </div>
 
-                    <div className="form-group">
-                      <label className="form-group__label">Place</label>
-                      <input
-                        className="form-outlined-input"
-                        name="place"
-                        value={localStudent.place || ""}
-                        onChange={handleEditChange}
-                        placeholder="Enter city/town"
-                      />
-                    </div>
+                <div className="form-group">
+                  <label className="form-group__label">Parent's Phone</label>
+                  <input
+                    className="form-outlined-input"
+                    name="parentNumber"
+                    value={localStudent.parentNumber || ""}
+                    onChange={handleEditChange}
+                    type="tel"
+                    pattern="[0-9]{10}"
+                    placeholder="Enter parent's phone number"
+                  />
+                </div>
 
-                    <div className="form-group">
-                      <label className="form-group__label">Aadhaar Number</label>
-                      <input
-                        className="form-outlined-input"
-                        name="adhaarNumber"
-                        value={localStudent.adhaarNumber || ""}
-                        onChange={handleEditChange}
-                        type="text"
-                        pattern="[0-9]{12}"
-                        title="12-digit Aadhaar number"
-                        placeholder="Enter 12-digit Aadhaar number"
-                      />
-                    </div>
+                <div className="form-group">
+                  <label className="form-group__label">Alternative Number</label>
+                  <input
+                    className="form-outlined-input"
+                    name="alternativeNumber"
+                    value={localStudent.alternativeNumber || ""}
+                    onChange={handleEditChange}
+                    type="tel"
+                    pattern="[0-9]{10}"
+                    placeholder="Enter alternative number"
+                  />
+                </div>
 
-                    <div className="form-group">
-                      <label className="form-group__label">Amount Paid (₹)</label>
-                      <input
-                        className="form-outlined-input"
-                        name="amountPaid"
-                        value={localStudent.rawAmount || ""}
-                        onChange={handleAmountChange}
-                        placeholder="Enter amount"
-                      />
-                    </div>
+                {/* Address Information */}
+                <div className="form-group">
+                  <label className="form-group__label">Place</label>
+                  <input
+                    className="form-outlined-input"
+                    name="place"
+                    value={localStudent.place || ""}
+                    onChange={handleEditChange}
+                    placeholder="Enter city/town"
+                  />
+                </div>
 
-                    <div className="form-group">
-                      <label className="form-group__label">Transaction ID</label>
-                      <input
-                        className="form-outlined-input"
-                        name="transactionId"
-                        value={localStudent.transactionId || ""}
-                        onChange={handleEditChange}
-                        placeholder="Enter transaction ID"
-                      />
-                    </div>
-                  </>
-                )}
+                <div className="form-group">
+                  <label className="form-group__label">Aadhaar Number</label>
+                  <input
+                    className="form-outlined-input"
+                    name="adhaarNumber"
+                    value={localStudent.adhaarNumber || ""}
+                    onChange={handleEditChange}
+                    type="text"
+                    pattern="[0-9]{12}"
+                    title="12-digit Aadhaar number"
+                    placeholder="Enter 12-digit Aadhaar number"
+                  />
+                </div>
+
+                {/* Academic Information */}
+                <div className="form-group">
+                  <label className="form-group__label">+2 Reg Number</label>
+                  <input
+                    className="form-outlined-input"
+                    name="plusTwoRegNumber"
+                    value={localStudent.plusTwoRegNumber || ""}
+                    onChange={handleEditChange}
+                    placeholder="Enter +2 registration number"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-group__label">+2 School Name</label>
+                  <input
+                    className="form-outlined-input"
+                    name="plusTwoSchoolName"
+                    value={localStudent.plusTwoSchoolName || ""}
+                    onChange={handleEditChange}
+                    placeholder="Enter +2 school name"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-group__label">+2 School Place</label>
+                  <input
+                    className="form-outlined-input"
+                    name="plusTwoSchoolPlace"
+                    value={localStudent.plusTwoSchoolPlace || ""}
+                    onChange={handleEditChange}
+                    placeholder="Enter +2 school place"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-group__label">Last Qualification</label>
+                  <input
+                    className="form-outlined-input"
+                    name="lastQualification"
+                    value={localStudent.lastQualification || ""}
+                    onChange={handleEditChange}
+                    placeholder="Enter last qualification"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-group__label">Last Qualification Marks</label>
+                  <input
+                    className="form-outlined-input"
+                    name="lastQualificationMarks"
+                    value={localStudent.lastQualificationMarks || ""}
+                    onChange={handleEditChange}
+                    placeholder="Enter marks"
+                  />
+                </div>
+
+                {/* Payment Information */}
+                <div className="form-group">
+                  <label className="form-group__label">Total Amount Paid (₹)</label>
+                  <input
+                    className="form-outlined-input"
+                    name="totalAmountPaid"
+                    value={localStudent.totalAmountPaid || ""}
+                    onChange={handleAmountChange}
+                    type="number"
+                    placeholder="Enter amount"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-group__label">Paid to College (₹)</label>
+                  <input
+                    className="form-outlined-input"
+                    name="paidToCollege"
+                    value={localStudent.paidToCollege || ""}
+                    onChange={handleEditChange}
+                    type="number"
+                    placeholder="Enter amount paid to college"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-group__label">Payment Remark</label>
+                  <input
+                    className="form-outlined-input"
+                    name="paymentRemark"
+                    value={localStudent.paymentRemark || ""}
+                    onChange={handleEditChange}
+                    placeholder="Enter payment remark"
+                  />
+                </div>
+
+                {/* Reference Information */}
+                <div className="form-group">
+                  <label className="form-group__label">Reference Name</label>
+                  <input
+                    className="form-outlined-input"
+                    name="reference.userName"
+                    value={localStudent.reference?.userName || ""}
+                    onChange={handleEditChange}
+                    placeholder="Enter reference name"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-group__label">Consultancy Name</label>
+                  <input
+                    className="form-outlined-input"
+                    name="reference.consultancyName"
+                    value={localStudent.reference?.consultancyName || ""}
+                    onChange={handleEditChange}
+                    placeholder="Enter consultancy name"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-group__label">Total Service Charge</label>
+                  <input
+                    className="form-outlined-input"
+                    name="reference.totalSC"
+                    value={localStudent.reference?.totalSC || ""}
+                    onChange={handleEditChange}
+                    placeholder="Enter total service charge"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-group__label">Committed Service Charge</label>
+                  <input
+                    className="form-outlined-input"
+                    name="reference.committedSC"
+                    value={localStudent.reference?.committedSC || ""}
+                    onChange={handleEditChange}
+                    placeholder="Enter committed service charge"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -532,15 +694,15 @@ const StudentList = () => {
             <h3 className="details-section__title">Personal Information</h3>
             <div className="details-grid">
               <div className="details-item">
-                <span className="details-item__label">Application Status</span>
-                <span className={`details-item__value details-item__value--${selectedStudent.applicationStatus === "Enroll" ? "enrolled" : "enquiry"}`}>
-                  {selectedStudent.applicationStatus === "Enroll" ? "Enrolled" : selectedStudent.applicationStatus}
-                </span>
+                <span className="details-item__label">Student ID</span>
+                <span className="details-item__value">{selectedStudent.studentId || "N/A"}</span>
               </div>
 
               <div className="details-item">
-                <span className="details-item__label">Student ID</span>
-                <span className="details-item__value">{selectedStudent.studentId || "N/A"}</span>
+                <span className="details-item__label">Status</span>
+                <span className={`details-item__value details-item__value--${selectedStudent.dateOfAdmission ? "enrolled" : "enquiry"}`}>
+                  {selectedStudent.dateOfAdmission ? "Enrolled" : "Enquiry"}
+                </span>
               </div>
 
               <div className="details-item">
@@ -549,8 +711,23 @@ const StudentList = () => {
               </div>
 
               <div className="details-item">
+                <span className="details-item__label">Email</span>
+                <span className="details-item__value">{selectedStudent.candidateEmail || "N/A"}</span>
+              </div>
+
+              <div className="details-item">
+                <span className="details-item__label">WhatsApp Number</span>
+                <span className="details-item__value">{selectedStudent.whatsappNumber || "N/A"}</span>
+              </div>
+
+              <div className="details-item">
                 <span className="details-item__label">Date of Birth</span>
                 <span className="details-item__value">{selectedStudent.dob || "N/A"}</span>
+              </div>
+
+              <div className="details-item">
+                <span className="details-item__label">Gender</span>
+                <span className="details-item__value">{selectedStudent.gender || "N/A"}</span>
               </div>
 
               <div className="details-item">
@@ -564,12 +741,12 @@ const StudentList = () => {
               </div>
 
               <div className="details-item">
-                <span className="details-item__label">Gender</span>
-                <span className="details-item__value">{selectedStudent.gender || "N/A"}</span>
+                <span className="details-item__label">Alternative Number</span>
+                <span className="details-item__value">{selectedStudent.alternativeNumber || "N/A"}</span>
               </div>
 
               <div className="details-item">
-                <span className="details-item__label">Adhaar Number</span>
+                <span className="details-item__label">Aadhaar Number</span>
                 <span className="details-item__value">{selectedStudent.adhaarNumber || "N/A"}</span>
               </div>
 
@@ -592,6 +769,36 @@ const StudentList = () => {
                 <span className="details-item__label">College</span>
                 <span className="details-item__value">{selectedStudent.college || "N/A"}</span>
               </div>
+
+              <div className="details-item">
+                <span className="details-item__label">Date of Admission</span>
+                <span className="details-item__value">{selectedStudent.dateOfAdmission || "N/A"}</span>
+              </div>
+
+              <div className="details-item">
+                <span className="details-item__label">+2 Reg Number</span>
+                <span className="details-item__value">{selectedStudent.plusTwoRegNumber || "N/A"}</span>
+              </div>
+
+              <div className="details-item">
+                <span className="details-item__label">+2 School Name</span>
+                <span className="details-item__value">{selectedStudent.plusTwoSchoolName || "N/A"}</span>
+              </div>
+
+              <div className="details-item">
+                <span className="details-item__label">+2 School Place</span>
+                <span className="details-item__value">{selectedStudent.plusTwoSchoolPlace || "N/A"}</span>
+              </div>
+
+              <div className="details-item">
+                <span className="details-item__label">Last Qualification</span>
+                <span className="details-item__value">{selectedStudent.lastQualification || "N/A"}</span>
+              </div>
+
+              <div className="details-item">
+                <span className="details-item__label">Last Qualification Marks</span>
+                <span className="details-item__value">{selectedStudent.lastQualificationMarks || "N/A"}</span>
+              </div>
             </div>
           </div>
 
@@ -599,33 +806,61 @@ const StudentList = () => {
             <h3 className="details-section__title">Financial Information</h3>
             <div className="details-grid">
               <div className="details-item">
-                <span className="details-item__label">Amount Paid</span>
-                <span className="details-item__value">{selectedStudent.amountPaid || "₹ 0"}</span>
+                <span className="details-item__label">Total Amount Paid</span>
+                <span className="details-item__value">
+                  {selectedStudent.totalAmountPaid ?
+                    new Intl.NumberFormat("en-IN", {
+                      style: "currency",
+                      currency: "INR"
+                    }).format(selectedStudent.totalAmountPaid) : "₹ 0"}
+                </span>
               </div>
 
               <div className="details-item">
-                <span className="details-item__label">Transaction ID</span>
-                <span className="details-item__value">{selectedStudent.transactionId || "N/A"}</span>
+                <span className="details-item__label">Paid to College</span>
+                <span className="details-item__value">
+                  {selectedStudent.paidToCollege ?
+                    new Intl.NumberFormat("en-IN", {
+                      style: "currency",
+                      currency: "INR"
+                    }).format(selectedStudent.paidToCollege) : "₹ 0"}
+                </span>
+              </div>
+
+              <div className="details-item">
+                <span className="details-item__label">Payment Remark</span>
+                <span className="details-item__value">{selectedStudent.paymentRemark || "N/A"}</span>
               </div>
             </div>
           </div>
 
           <div className="details-section">
-            <h3 className="details-section__title">Other Information</h3>
+            <h3 className="details-section__title">Reference Information</h3>
             <div className="details-grid">
               <div className="details-item">
-                <span className="details-item__label">Reference</span>
+                <span className="details-item__label">Reference Name</span>
                 <span className="details-item__value">{selectedStudent.reference?.userName || "N/A"}</span>
               </div>
 
               <div className="details-item">
-                <span className="details-item__label">Consultancy</span>
+                <span className="details-item__label">Consultancy Name</span>
                 <span className="details-item__value">{selectedStudent.reference?.consultancyName || "N/A"}</span>
               </div>
 
               <div className="details-item">
-                <span className="details-item__label">Created At</span>
-                <span className="details-item__value">{selectedStudent.createdAt || "N/A"}</span>
+                <span className="details-item__label">Total Service Charge</span>
+                <span className="details-item__value">{selectedStudent.reference?.totalSC || "N/A"}</span>
+              </div>
+
+              <div className="details-item">
+                <span className="details-item__label">Committed Service Charge</span>
+                <span className="details-item__value">{selectedStudent.reference?.committedSC || "N/A"}</span>
+              </div>
+
+              <div className="details-item">
+                <span className="details-item__label">Date of Admission</span>
+                <span className="details-item__value">{selectedStudent.dateOfAdmission
+                  || "N/A"}</span>
               </div>
             </div>
           </div>
@@ -679,7 +914,7 @@ const StudentList = () => {
               ))}
             </select>
             {(statusFilter || collegeFilter || searchTerm) && (
-              <button 
+              <button
                 className="button button--outline"
                 onClick={() => {
                   setStatusFilter('');
@@ -796,12 +1031,12 @@ const StudentList = () => {
         )}
       </main>
 
-      {showEditModal && 
-      <EditModal 
-      selectedStudent={selectedStudent}
-      setShowEditModal={setShowEditModal}
-      isSaving={isSaving}
-      />}
+      {showEditModal &&
+        <EditModal
+          selectedStudent={selectedStudent}
+          setShowEditModal={setShowEditModal}
+          isSaving={isSaving}
+        />}
       {showDetailsModal && <DetailsModal />}
     </div>
   );
