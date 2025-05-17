@@ -561,7 +561,6 @@ const StudentList = () => {
                     name="totalAmountPaid"
                     value={localStudent.totalAmountPaid || ""}
                     onChange={handleAmountChange}
-                    type="number"
                     placeholder="Enter amount"
                   />
                 </div>
@@ -573,7 +572,6 @@ const StudentList = () => {
                     name="paidToCollege"
                     value={localStudent.paidToCollege || ""}
                     onChange={handleEditChange}
-                    type="number"
                     placeholder="Enter amount paid to college"
                   />
                 </div>
