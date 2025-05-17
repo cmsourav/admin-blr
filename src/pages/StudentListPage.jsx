@@ -132,8 +132,8 @@ const StudentList = () => {
         <div className="student-card__info">
           <h3 className="student-card__name">{student.candidateName}</h3>
           <p className="student-card__course">{student.course}</p>
-          <span className={`student-card__status student-card__status--${student.dateOfAdmission ? "enrolled" : "enquiry"}`}>
-            {student.dateOfAdmission ? "Enrolled" : "Enquiry"}
+          <span className={`student-card__status student-card__status--${student.applicationStatus === "enroll" ? "enrolled" : "enquiry"}`}>
+            {student.applicationStatus === "enroll" ? "Enrolled" : student.applicationStatus}
           </span>
         </div>
       </div>
@@ -222,6 +222,17 @@ const StudentList = () => {
           course: "", // Reset course when college changes
           [name]: value
         }));
+      } else if (name === "dateOfAdmission") {
+        // Check if dateOfAdmission is being set from empty to a value
+        const wasEmpty = !localStudent.dateOfAdmission;
+        const isNowFilled = !!value;
+
+        setLocalStudent(prev => ({
+          ...prev,
+          [name]: value,
+          // Update applicationStatus if changing from empty to filled
+          ...(wasEmpty && isNowFilled && { applicationStatus: "enroll" })
+        }));
       } else if (name.startsWith("reference.")) {
         const refField = name.split(".")[1];
         setLocalStudent(prev => ({
@@ -289,8 +300,9 @@ const StudentList = () => {
 
           <div className="modal__content">
             <div className="form-section">
+              {/* Basic Information */}
+              <h3 className="details-section__title">Personal Information</h3>
               <div className="form-grid">
-                {/* Basic Information */}
                 <div className="form-group">
                   <label className="form-group__label">Student ID</label>
                   <input
@@ -698,8 +710,8 @@ const StudentList = () => {
 
               <div className="details-item">
                 <span className="details-item__label">Status</span>
-                <span className={`details-item__value details-item__value--${selectedStudent.dateOfAdmission ? "enrolled" : "enquiry"}`}>
-                  {selectedStudent.dateOfAdmission ? "Enrolled" : "Enquiry"}
+                <span className={`details-item__value details-item__value--${selectedStudent.applicationStatus === "enroll" ? "enrolled" : "enquiry"}`}>
+                  {selectedStudent.applicationStatus === "enroll" ? "Enrolled" : selectedStudent.applicationStatus}
                 </span>
               </div>
 

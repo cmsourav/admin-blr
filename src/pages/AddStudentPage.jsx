@@ -243,6 +243,7 @@ const AddStudent = () => {
 
     const studentData = {
       ...student,
+      applicationStatus: "enroll",
       createdAt: Timestamp.now(),
       createdBy: user.uid
     };
