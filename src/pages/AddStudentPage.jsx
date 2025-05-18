@@ -643,83 +643,6 @@ const AddStudent = () => {
                 </div>
               </div>
 
-              {/* Reference Details Section */}
-              <div className="modern-form-section">
-                <div className="modern-section-header">
-                  <h3 className="modern-section-title">
-                    <svg className="modern-section-icon" viewBox="0 0 24 24">
-                      <path fill="currentColor" d="M12,3L2,12H5V20H19V12H22L12,3M12,7.7C14.1,7.7 15.8,9.4 15.8,11.5C15.8,14.5 12,18 12,18C12,18 8.2,14.5 8.2,11.5C8.2,9.4 9.9,7.7 12,7.7M12,10A1.5,1.5 0 0,0 10.5,11.5A1.5,1.5 0 0,0 12,13A1.5,1.5 0 0,0 13.5,11.5A1.5,1.5 0 0,0 12,10Z" />
-                    </svg>
-                    Reference Details
-                  </h3>
-                  <div className="modern-section-divider"></div>
-                </div>
-                <div className="modern-input-grid">
-                  <div className="modern-input-group">
-                    <label htmlFor="reference.userName" className="modern-input-label">
-                      Reference Name <span className="modern-required">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="reference.userName"
-                      name="reference.userName"
-                      value={student.reference?.userName || ""}
-                      onChange={handleChange}
-                      placeholder="Enter reference name"
-                      className={`modern-input ${formErrors["reference.userName"] ? "error" : ""}`}
-                    />
-                    {formErrors["reference.userName"] && (
-                      <span className="modern-error-message">{formErrors["reference.userName"]}</span>
-                    )}
-                  </div>
-
-                  <div className="modern-input-group">
-                    <label htmlFor="reference.consultancyName" className="modern-input-label">
-                      Consultancy Name
-                    </label>
-                    <input
-                      type="text"
-                      id="reference.consultancyName"
-                      name="reference.consultancyName"
-                      value={student.reference?.consultancyName || ""}
-                      onChange={handleChange}
-                      placeholder="Enter consultancy name"
-                      className="modern-input"
-                    />
-                  </div>
-
-                  <div className="modern-input-group">
-                    <label htmlFor="reference.totalSC" className="modern-input-label">
-                      Total SC
-                    </label>
-                    <input
-                      type="text"
-                      id="reference.totalSC"
-                      name="reference.totalSC"
-                      value={student.reference?.totalSC || ""}
-                      onChange={handleChange}
-                      placeholder="Enter total SC"
-                      className="modern-input"
-                    />
-                  </div>
-
-                  <div className="modern-input-group">
-                    <label htmlFor="reference.committedSC" className="modern-input-label">
-                      Committed SC
-                    </label>
-                    <input
-                      type="text"
-                      id="reference.committedSC"
-                      name="reference.committedSC"
-                      value={student.reference?.committedSC || ""}
-                      onChange={handleChange}
-                      placeholder="Enter committed SC"
-                      className="modern-input"
-                    />
-                  </div>
-                </div>
-              </div>
-
               {/* Academic Details Section */}
               <div className="modern-form-section">
                 <div className="modern-section-header">
@@ -807,6 +730,83 @@ const AddStudent = () => {
                       value={student.lastQualificationMarks}
                       onChange={handleChange}
                       placeholder="Enter mark percentage"
+                      className="modern-input"
+                    />
+                  </div>
+                </div>
+              </div>
+
+                {/* Reference Details Section */}
+              <div className="modern-form-section">
+                <div className="modern-section-header">
+                  <h3 className="modern-section-title">
+                    <svg className="modern-section-icon" viewBox="0 0 24 24">
+                      <path fill="currentColor" d="M12,3L2,12H5V20H19V12H22L12,3M12,7.7C14.1,7.7 15.8,9.4 15.8,11.5C15.8,14.5 12,18 12,18C12,18 8.2,14.5 8.2,11.5C8.2,9.4 9.9,7.7 12,7.7M12,10A1.5,1.5 0 0,0 10.5,11.5A1.5,1.5 0 0,0 12,13A1.5,1.5 0 0,0 13.5,11.5A1.5,1.5 0 0,0 12,10Z" />
+                    </svg>
+                    Reference Details
+                  </h3>
+                  <div className="modern-section-divider"></div>
+                </div>
+                <div className="modern-input-grid">
+                  <div className="modern-input-group">
+                    <label htmlFor="reference.userName" className="modern-input-label">
+                      Reference Name <span className="modern-required">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="reference.userName"
+                      name="reference.userName"
+                      value={student.reference?.userName || ""}
+                      onChange={handleChange}
+                      placeholder="Enter reference name"
+                      className={`modern-input ${formErrors["reference.userName"] ? "error" : ""}`}
+                    />
+                    {formErrors["reference.userName"] && (
+                      <span className="modern-error-message">{formErrors["reference.userName"]}</span>
+                    )}
+                  </div>
+
+                  <div className="modern-input-group">
+                    <label htmlFor="reference.consultancyName" className="modern-input-label">
+                      Consultancy Name
+                    </label>
+                    <input
+                      type="text"
+                      id="reference.consultancyName"
+                      name="reference.consultancyName"
+                      value={student.reference?.consultancyName || ""}
+                      onChange={handleChange}
+                      placeholder="Enter consultancy name"
+                      className="modern-input"
+                    />
+                  </div>
+
+                  <div className="modern-input-group">
+                    <label htmlFor="reference.totalSC" className="modern-input-label">
+                      Total SC
+                    </label>
+                    <input
+                      type="text"
+                      id="reference.totalSC"
+                      name="reference.totalSC"
+                      value={student.reference?.totalSC || ""}
+                      onChange={handleChange}
+                      placeholder="Enter total SC"
+                      className="modern-input"
+                    />
+                  </div>
+
+                  <div className="modern-input-group">
+                    <label htmlFor="reference.committedSC" className="modern-input-label">
+                      Committed SC
+                    </label>
+                    <input
+                      type="text"
+                      id="reference.committedSC"
+                      name="reference.committedSC"
+                      value={student.reference?.committedSC || ""}
+                      onChange={handleChange}
+                      placeholder="Enter committed SC"
                       className="modern-input"
                     />
                   </div>

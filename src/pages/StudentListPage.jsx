@@ -24,7 +24,7 @@ const StudentList = () => {
   const [statusFilter, setStatusFilter] = useState("");
   const [collegeFilter, setCollegeFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const studentsPerPage = 8;
+  const studentsPerPage = 9;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Fetch students
@@ -703,16 +703,23 @@ const StudentList = () => {
           <div className="details-section">
             <h3 className="details-section__title">Personal Information</h3>
             <div className="details-grid">
-              <div className="details-item">
-                <span className="details-item__label">Student ID</span>
-                <span className="details-item__value">{selectedStudent.studentId || "N/A"}</span>
-              </div>
 
               <div className="details-item">
                 <span className="details-item__label">Status</span>
                 <span className={`details-item__value details-item__value--${selectedStudent.applicationStatus === "enroll" ? "enrolled" : "enquiry"}`}>
                   {selectedStudent.applicationStatus === "enroll" ? "Enrolled" : selectedStudent.applicationStatus}
                 </span>
+              </div>
+
+              <div className="details-item">
+                <span className="details-item__label">Date of Admission</span>
+                <span className="details-item__value">{selectedStudent.dateOfAdmission
+                  || "N/A"}</span>
+              </div>
+
+              <div className="details-item">
+                <span className="details-item__label">Student ID</span>
+                <span className="details-item__value">{selectedStudent.studentId || "N/A"}</span>
               </div>
 
               <div className="details-item">
@@ -780,9 +787,10 @@ const StudentList = () => {
                 <span className="details-item__value">{selectedStudent.college || "N/A"}</span>
               </div>
 
+
               <div className="details-item">
-                <span className="details-item__label">Date of Admission</span>
-                <span className="details-item__value">{selectedStudent.dateOfAdmission || "N/A"}</span>
+                <span className="details-item__label">Last Qualification</span>
+                <span className="details-item__value">{selectedStudent.lastQualification || "N/A"}</span>
               </div>
 
               <div className="details-item">
@@ -801,11 +809,6 @@ const StudentList = () => {
               </div>
 
               <div className="details-item">
-                <span className="details-item__label">Last Qualification</span>
-                <span className="details-item__value">{selectedStudent.lastQualification || "N/A"}</span>
-              </div>
-
-              <div className="details-item">
                 <span className="details-item__label">Last Qualification Marks</span>
                 <span className="details-item__value">{selectedStudent.lastQualificationMarks || "N/A"}</span>
               </div>
@@ -813,7 +816,7 @@ const StudentList = () => {
           </div>
 
           <div className="details-section">
-            <h3 className="details-section__title">Financial Information</h3>
+            <h3 className="details-section__title">Fees Payment Details</h3>
             <div className="details-grid">
               <div className="details-item">
                 <span className="details-item__label">Total Amount Paid</span>
@@ -867,11 +870,6 @@ const StudentList = () => {
                 <span className="details-item__value">{selectedStudent.reference?.committedSC || "N/A"}</span>
               </div>
 
-              <div className="details-item">
-                <span className="details-item__label">Date of Admission</span>
-                <span className="details-item__value">{selectedStudent.dateOfAdmission
-                  || "N/A"}</span>
-              </div>
             </div>
           </div>
         </div>
