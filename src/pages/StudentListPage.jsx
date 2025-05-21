@@ -393,6 +393,98 @@ const StudentList = () => {
                   </select>
                 </div>
 
+                <div className="form-group">
+                  <label className="form-group__label">Mother's Name</label>
+                  <input
+                    className="form-outlined-input"
+                    name="motherName"
+                    value={localStudent.motherName || ""}
+                    onChange={handleEditChange}
+                    placeholder="Enter mother's name"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-group__label">Mother's Number</label>
+                  <input
+                    className="form-outlined-input"
+                    name="motherNumber"
+                    value={localStudent.motherNumber || ""}
+                    onChange={handleEditChange}
+                    type="tel"
+                    pattern="[0-9]{10}"
+                    placeholder="Enter mother's phone number"
+                  />
+                </div>
+
+                {/* Address Information */}
+                <div className="form-group">
+                  <label className="form-group__label">Address</label>
+                  <textarea
+                    className="form-outlined-input"
+                    name="address"
+                    value={localStudent.address || ""}
+                    onChange={handleEditChange}
+                    placeholder="Enter full address"
+                    rows="3"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-group__label">State</label>
+                  <input
+                    className="form-outlined-input"
+                    name="state"
+                    value={localStudent.state || ""}
+                    onChange={handleEditChange}
+                    placeholder="Enter state"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-group__label">District</label>
+                  <input
+                    className="form-outlined-input"
+                    name="district"
+                    value={localStudent.district || ""}
+                    onChange={handleEditChange}
+                    placeholder="Enter district"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-group__label">Pincode</label>
+                  <input
+                    className="form-outlined-input"
+                    name="pincode"
+                    value={localStudent.pincode || ""}
+                    onChange={handleEditChange}
+                    type="text"
+                    pattern="[0-9]{6}"
+                    title="6-digit pincode"
+                    placeholder="Enter 6-digit pincode"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-group__label">Religion</label>
+                  <select
+                    className="form-outlined-input"
+                    name="religion"
+                    value={localStudent.religion || ""}
+                    onChange={handleEditChange}
+                  >
+                    <option value="">Select Religion</option>
+                    <option value="Hindu">Hindu</option>
+                    <option value="Muslim">Muslim</option>
+                    <option value="Christian">Christian</option>
+                    <option value="Sikh">Sikh</option>
+                    <option value="Buddhist">Buddhist</option>
+                    <option value="Jain">Jain</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
                 {/* College Information */}
                 <div className="form-group">
                   <label className="form-group__label">College</label>
@@ -705,7 +797,6 @@ const StudentList = () => {
           <div className="details-section">
             <h3 className="details-section__title">Personal Information</h3>
             <div className="details-grid">
-
               <div className="details-item">
                 <span className="details-item__label">Status</span>
                 <span className={`details-item__value details-item__value--${selectedStudent.applicationStatus === "enroll" ? "enrolled" : "enquiry"}`}>
@@ -715,8 +806,7 @@ const StudentList = () => {
 
               <div className="details-item">
                 <span className="details-item__label">Date of Admission</span>
-                <span className="details-item__value">{selectedStudent.dateOfAdmission
-                  || "N/A"}</span>
+                <span className="details-item__value">{selectedStudent.dateOfAdmission || "N/A"}</span>
               </div>
 
               <div className="details-item">
@@ -755,13 +845,18 @@ const StudentList = () => {
               </div>
 
               <div className="details-item">
-                <span className="details-item__label">Parent's Number</span>
+                <span className="details-item__label">Mother's Name</span>
+                <span className="details-item__value">{selectedStudent.motherName || "N/A"}</span>
+              </div>
+
+              <div className="details-item">
+                <span className="details-item__label">Father's Number</span>
                 <span className="details-item__value">{selectedStudent.parentNumber || "N/A"}</span>
               </div>
 
               <div className="details-item">
-                <span className="details-item__label">Alternative Number</span>
-                <span className="details-item__value">{selectedStudent.alternativeNumber || "N/A"}</span>
+                <span className="details-item__label">Mother's Number</span>
+                <span className="details-item__value">{selectedStudent.motherNumber || "N/A"}</span>
               </div>
 
               <div className="details-item">
@@ -770,8 +865,28 @@ const StudentList = () => {
               </div>
 
               <div className="details-item">
-                <span className="details-item__label">Place</span>
-                <span className="details-item__value">{selectedStudent.place || "N/A"}</span>
+                <span className="details-item__label">Religion</span>
+                <span className="details-item__value">{selectedStudent.religion || "N/A"}</span>
+              </div>
+
+              <div className="details-item">
+                <span className="details-item__label">Address</span>
+                <span className="details-item__value">{selectedStudent.address || "N/A"}</span>
+              </div>
+
+              <div className="details-item">
+                <span className="details-item__label">District</span>
+                <span className="details-item__value">{selectedStudent.district || "N/A"}</span>
+              </div>
+
+              <div className="details-item">
+                <span className="details-item__label">State</span>
+                <span className="details-item__value">{selectedStudent.state || "N/A"}</span>
+              </div>
+
+              <div className="details-item">
+                <span className="details-item__label">Pincode</span>
+                <span className="details-item__value">{selectedStudent.pincode || "N/A"}</span>
               </div>
             </div>
           </div>
@@ -788,7 +903,6 @@ const StudentList = () => {
                 <span className="details-item__label">College</span>
                 <span className="details-item__value">{selectedStudent.college || "N/A"}</span>
               </div>
-
 
               <div className="details-item">
                 <span className="details-item__label">Last Qualification</span>
@@ -871,7 +985,6 @@ const StudentList = () => {
                 <span className="details-item__label">Committed Service Charge</span>
                 <span className="details-item__value">{selectedStudent.reference?.committedSC || "N/A"}</span>
               </div>
-
             </div>
           </div>
         </div>
@@ -893,271 +1006,277 @@ const StudentList = () => {
     </div>
   );
 
-  const generatePDF = async (student) => {
-    try {
-      const doc = new jsPDF();
+const generatePDF = async (student) => {
+  try {
+    const doc = new jsPDF();
 
-      // Layout constants
-      const pageWidth = doc.internal.pageSize.getWidth(); // 210mm for A4
-      const pageHeight = doc.internal.pageSize.getHeight(); // 297mm for A4
-      const margin = 15;
-      const contentWidth = pageWidth - margin * 2;
+    // Layout constants
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 15;
+    const contentWidth = pageWidth - margin * 2;
+    const columnGap = 10;
 
-      let y = margin;
+    let y = margin;
+    let isFirstPage = true; // Track if we're on the first page
 
-      // Modern color palette
-      const colors = {
-        primary: '#2C3E50',    // Dark blue
-        secondary: '#E74C3C',  // Red
-        accent: '#3498DB',     // Blue
-        lightBg: '#F8F9FA',    // Very light gray
-        border: '#E0E0E0',     // Light gray
-        textDark: '#2C3E50',   // Dark text
-        textMedium: '#5D6D7E', // Medium text
-        textLight: '#7F8C8D'   // Light text
-      };
+    // Modern color palette
+    const colors = {
+      primary: '#2C3E50',
+      secondary: '#E74C3C',
+      accent: '#3498DB',
+      lightBg: '#F8F9FA',
+      border: '#E0E0E0',
+      textDark: '#2C3E50',
+      textMedium: '#5D6D7E',
+      textLight: '#7F8C8D'
+    };
 
-      // Typography
-      const fonts = {
-        normal: 'helvetica',
-        bold: 'helvetica-bold',
-        title: 'helvetica-bold'
-      };
+    // Typography
+    const fonts = {
+      normal: 'helvetica',
+      bold: 'helvetica-bold',
+      title: 'helvetica-bold'
+    };
 
-      // Dimensions
-      const dimensions = {
-        fontSize: 10,
-        labelWidth: 45,
-        lineSpacing: 6,
-        rowGap: 4,
-        sectionTitleHeight: 10,
-        fieldHeight: 6
-      };
+    // Dimensions
+    const dimensions = {
+      fontSize: 10,
+      labelWidth: 50,
+      lineSpacing: 6,
+      rowGap: 6,
+      sectionTitleHeight: 10,
+      fieldHeight: 8,
+      headerHeight: 40,
+      footerHeight: 25,
+      minColumnWidth: 70
+    };
 
-      // Helper function to check page breaks
-      const checkPageBreak = (requiredHeight = 20) => {
-        if (y + requiredHeight > pageHeight - 30) {
-          addFooter();
-          doc.addPage();
-          y = margin;
-          addHeader();
-          return true;
-        }
-        return false;
-      };
-
-      // Modern header with logo
-      const addHeader = () => {
+    // Improved page break checker
+    const checkPageBreak = (requiredHeight = 20) => {
+      const buffer = 5;
+      if (y + requiredHeight + buffer > pageHeight - dimensions.footerHeight) {
+        addFooter();
+        doc.addPage();
         y = margin;
+        isFirstPage = false; // No longer on first page
+        return true;
+      }
+      return false;
+    };
 
-        // Draw a light background strip
-        doc.setFillColor(colors.lightBg);
-        doc.rect(0, 0, pageWidth, 40, 'F');
+    // Header - only shown on first page
+    const addHeader = () => {
+      if (!isFirstPage) return; // Skip if not first page
+      
+      y = margin;
 
-        // Add logo if provided
-        try {
-          doc.addImage(logo, 'JPEG', margin, 10, 40, 20);
-        } catch {
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(16);
-          doc.setTextColor(primary);
-          doc.text('KM FOUNDATION', margin, 20);
-        }
+      // Header background
+      doc.setFillColor(colors.lightBg);
+      doc.rect(0, 0, pageWidth, dimensions.headerHeight, 'F');
 
-        // Main title
-        doc.setFont(fonts.title);
-        doc.setFontSize(18);
+      // Logo/Title
+      try {
+        doc.addImage(logo, 'JPEG', margin, 10, 40, 20);
+      } catch {
+        doc.setFont(fonts.title, 'bold');
+        doc.setFontSize(16);
         doc.setTextColor(colors.primary);
-        doc.text('APPLICATION FORM', pageWidth / 2, y + 1, { align: 'center' });
+        doc.text('KM FOUNDATION', margin, 20);
+      }
 
-        // Application info
-        y += 25;
-        doc.setFontSize(10);
-        doc.setFont(fonts.bold);
-        doc.setTextColor(colors.secondary);
+      // Main title
+      doc.setFont(fonts.title);
+      doc.setFontSize(18);
+      doc.setTextColor(colors.primary);
+      doc.text('APPLICATION FORM', pageWidth / 2, y + 20, { align: 'center' });
 
-        // const appNo = `APPLICATION NO: ${student.applicationNumber || 'EGI/ECD/2023-24/XXXXX'}`;
-        const date = `APPLICATION DATE: ${student.dateOfAdmission || new Date().toLocaleDateString()}`;
+      // Application date
+      y += 25;
+      doc.setFontSize(10);
+      doc.setFont(fonts.bold);
+      doc.setTextColor(colors.secondary);
+      const date = `APPLICATION DATE: ${student.dateOfAdmission || formatDate(new Date())}`;
+      doc.text(date, pageWidth - margin, y, { align: 'right' });
 
-        // doc.text(appNo, margin, y);
-        doc.text(date, pageWidth - margin, y, { align: 'right' });
+      y += 12;
+    };
 
-        y += 10;
+    // Format date consistently
+    const formatDate = (dateString) => {
+      try {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-IN', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        });
+      } catch {
+        return new Date().toLocaleDateString('en-IN');
+      }
+    };
 
-        // Divider line
-        // doc.setDrawColor(colors.border);
-        // doc.line(margin, y, pageWidth - margin, y);
-        // y += 8;
-      };
+    // Footer - shown on all pages
+    const addFooter = () => {
+      const footerY = pageHeight - dimensions.footerHeight;
+      
+      // Divider line
+      doc.setDrawColor(colors.border);
+      doc.line(margin, footerY, pageWidth - margin, footerY);
+      
+      // Footer content
+      doc.setFont(fonts.normal);
+      doc.setFontSize(8);
+      doc.setTextColor(colors.textMedium);
+      
+      const pageCount = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.text('© KM Foundation - All Rights Reserved', margin, pageHeight - 10);
+        doc.text(`Page ${i} of ${pageCount}`, pageWidth - margin, pageHeight - 10, { align: 'right' });
+      }
+    };
 
-      // Modern footer
-      const addFooter = () => {
-        const footerY = pageHeight - 25;
-        const lineLength = 70;
+    // Section titles
+    const addSectionTitle = (title) => {
+      checkPageBreak(20);
 
-        doc.setFont(fonts.normal);
-        doc.setFontSize(9);
-        doc.setTextColor(colors.textMedium);
-        doc.setDrawColor(colors.border);
+      doc.setFillColor(colors.lightBg);
+      doc.setDrawColor(colors.border);
+      doc.setFontSize(12);
+      doc.setFont(fonts.bold);
+      doc.setTextColor(colors.primary);
 
-        // Page number
-        doc.setFontSize(8);
-        const pageCount = doc.internal.getNumberOfPages();
-        for (let i = 1; i <= pageCount; i++) {
-          doc.setPage(i);
-          doc.text(`Page ${i} of ${pageCount}`, pageWidth - margin, pageHeight - 10, { align: 'right' });
+      doc.roundedRect(
+        margin,
+        y,
+        contentWidth,
+        dimensions.sectionTitleHeight,
+        2,
+        2,
+        'FD'
+      );
+
+      doc.setFillColor(colors.secondary);
+      doc.rect(margin, y, 3, dimensions.sectionTitleHeight, 'F');
+
+      doc.text(title, margin + 8, y + 7);
+      y += dimensions.sectionTitleHeight + 10;
+    };
+
+    // Field rendering
+    const addField = (label, value, x, yPos, width) => {
+      const effectiveLabelWidth = Math.min(dimensions.labelWidth, width * 0.4);
+      const textWidth = width - effectiveLabelWidth - 2;
+      
+      doc.setFont(fonts.bold);
+      doc.setFontSize(dimensions.fontSize);
+      doc.setTextColor(colors.textDark);
+      
+      const labelLines = doc.splitTextToSize(label + ':', effectiveLabelWidth);
+      doc.text(labelLines, x, yPos);
+      
+      doc.setFont(fonts.normal);
+      doc.setTextColor(colors.textMedium);
+      
+      const textX = x + effectiveLabelWidth + 2;
+      const formattedValue = value !== undefined && value !== null ? String(value) : '-';
+      const valueLines = doc.splitTextToSize(formattedValue, textWidth);
+      
+      doc.text(valueLines, textX, yPos);
+      
+      return Math.max(labelLines.length, valueLines.length) * dimensions.lineSpacing;
+    };
+
+    // Two-column layout
+    const addTwoColumnFields = (fields) => {
+      const availableWidth = contentWidth - columnGap;
+      const columnWidth = availableWidth / 2;
+      
+      if (columnWidth < dimensions.minColumnWidth * 2 + columnGap) {
+        for (const field of fields) {
+          if (!field) continue;
+          const height = addField(field[0], field[1], margin, y, contentWidth);
+          y += height + dimensions.rowGap;
+          checkPageBreak(10);
         }
-      };
+        return;
+      }
+      
+      const col1X = margin;
+      const col2X = margin + columnWidth + columnGap;
 
-      // Modern section title
-      const addSectionTitle = (title) => {
-        checkPageBreak(15);
+      for (let i = 0; i < fields.length; i += 2) {
+        const field1 = fields[i];
+        const field2 = i + 1 < fields.length ? fields[i + 1] : null;
 
-        doc.setFillColor(colors.lightBg);
-        doc.setDrawColor(colors.border);
-        doc.setFontSize(12);
-        doc.setFont(fonts.bold);
-        doc.setTextColor(colors.primary);
+        if (!field1) continue;
 
-        // Section rectangle with subtle border
-        doc.roundedRect(
-          margin,
-          y,
-          contentWidth,
-          dimensions.sectionTitleHeight,
-          2,
-          2,
-          'FD'
-        );
+        const field1Height = addField(field1[0], field1[1], col1X, y, columnWidth);
+        const field2Height = field2 ? addField(field2[0], field2[1], col2X, y, columnWidth) : 0;
+        
+        const rowHeight = Math.max(field1Height, field2Height) + dimensions.rowGap;
+        
+        checkPageBreak(rowHeight);
+        y += rowHeight;
+      }
+    };
 
-        // Left accent bar
-        doc.setFillColor(colors.secondary);
-        doc.rect(margin, y, 3, dimensions.sectionTitleHeight, 'F');
+    // ----------------- BEGIN PDF GENERATION -----------------
+    addHeader(); // Only added on first page
 
-        doc.text(title, margin + 8, y + 7);
-        y += dimensions.sectionTitleHeight + 8;
-      };
+    // Enrollment Details
+    addSectionTitle('ENROLLMENT DETAILS');
+    addTwoColumnFields([
+      ['Name', student.candidateName],
+      ['Contact Number', student.candidateNumber],
+      ['Email', student.candidateEmail],
+      ['WhatsApp Number', student.whatsappNumber],
+      ["Parent's Contact", student.parentNumber],
+      ['Aadhar Number', student.adhaarNumber],
+      ['Course Program', student.course],
+      ['College/University', student.college],
+    ]);
 
-      // Improved field rendering
-      const addField = (label, value, x, yPos, width) => {
-        doc.setFont(fonts.bold);
-        doc.setFontSize(dimensions.fontSize);
-        doc.setTextColor(colors.textDark);
-        doc.text(`${label}:`, x, yPos);
+    // Personal Details
+    addSectionTitle('PERSONAL DETAILS');
+    addTwoColumnFields([
+      ['Date of Birth', formatDate(student.dob)],
+      ['Gender', student.gender],
+      ["Father's Name", student.fatherName],
+      ["Father's Contact", student.parentNumber],
+      ["Mother's Name", student.motherName],
+      ["Mother's Contact", student.alternativeNumber],
+      ['Religion', student.religion],
+      ['Full Address', student.address],
+      ['State', student.state],
+      ['District', student.district],
+      ['PIN Code', student.pincode]
+    ]);
 
-        doc.setFont(fonts.normal);
-        doc.setTextColor(colors.textMedium);
+    // Academic Details
+    addSectionTitle('ACADEMIC DETAILS');
+    addTwoColumnFields([
+      ['Highest Qualification', student.lastQualification],
+      ['Percentage/Grade', student.lastQualificationMarks],
+      ['+2 Registration No', student.plusTwoRegNumber],
+      ['+2 School/College', student.plusTwoSchoolName],
+      ['School Location', student.plusTwoSchoolPlace]
+    ]);
 
-        const textX = x + dimensions.labelWidth;
-        const textWidth = width - dimensions.labelWidth;
 
-        if (value && typeof value === 'string' && value.length > 40) {
-          // Handle long text with text wrapping
-          const lines = doc.splitTextToSize(value || '-', textWidth);
-          doc.text(lines, textX, yPos);
-          return lines.length * dimensions.lineSpacing;
-        } else {
-          doc.text(value || '-', textX, yPos);
-          return dimensions.lineSpacing;
-        }
-      };
 
-      // Modern two-column layout
-      const addTwoColumnFields = (fields) => {
-        const col1X = margin;
-        const col2X = pageWidth / 2;
-        const columnWidth = (pageWidth / 2) - margin - 5;
+    addFooter(); // Added to all pages
 
-        for (let i = 0; i < fields.length; i += 2) {
-          const field1 = fields[i];
-          const field2 = i + 1 < fields.length ? fields[i + 1] : null;
+    // Save the PDF
+    const fileName = `${(student.candidateName || 'Application').replace(/[^a-zA-Z0-9-]/g, '_')}_Form.pdf`;
+    doc.save(fileName);
 
-          // Calculate required height for both fields
-          let field1Height = dimensions.fieldHeight;
-          let field2Height = dimensions.fieldHeight;
-
-          if (field1 && field1[1] && field1[1].length > 40) {
-            const lines = doc.splitTextToSize(field1[1], columnWidth - dimensions.labelWidth);
-            field1Height = Math.max(dimensions.fieldHeight, lines.length * dimensions.lineSpacing);
-          }
-
-          if (field2 && field2[1] && field2[1].length > 40) {
-            const lines = doc.splitTextToSize(field2[1], columnWidth - dimensions.labelWidth);
-            field2Height = Math.max(dimensions.fieldHeight, lines.length * dimensions.lineSpacing);
-          }
-
-          const rowHeight = Math.max(field1Height, field2Height) + dimensions.rowGap;
-
-          // Check if we need a new page
-          checkPageBreak(rowHeight);
-
-          // Render first field
-          if (field1) {
-            addField(field1[0], field1[1], col1X, y, columnWidth);
-          }
-
-          // Render second field if exists
-          if (field2) {
-            addField(field2[0], field2[1], col2X, y, columnWidth);
-          }
-
-          y += rowHeight;
-        }
-      };
-
-      // ----------------- BEGIN PDF GENERATION -----------------
-      addHeader();
-
-      // College & Course Details
-      addSectionTitle('ENROLLMENT DETAILS');
-      addTwoColumnFields([
-        ['Name', student.candidateName],
-        ['Contact Number', student.candidateNumber],
-        ['Email', student.candidateEmail],
-        ['WhatsApp Number', student.whatsappNumber],
-        ["Parent Number", student.parentNumber],
-        ['Aadhar Number', student.adhaarNumber],
-        ['Course', student.course],
-        ['College Name', student.college],
-      ]);
-
-      // Personal Details
-      addSectionTitle('Personal Details');
-      addTwoColumnFields([
-        ['Date of Birth', student.dob],
-        ['Gender', student.gender],
-        ["Father's Name", student.fatherName],
-        ["Parent Number", student.parentNumber],
-        ["Mother's Name", student.motherName],
-        ["Mother Number", student.alternativeNumber],
-        ['Religion', student.religion],
-        ['Address', student.address],
-        ['State', student.state],
-        ['District', student.district],
-        ['Pin Code', student.pincode]
-      ]);
-
-      // Accadamic Details
-      addSectionTitle('Accadamic Details');
-      addTwoColumnFields([
-        ['Last Qualification', student.lastQualification],
-        ['Mark %', student.lastQualificationMarks],
-        ['+2 Reg.No', student.plusTwoRegNumber],
-        ['+2 School Name', student.plusTwoSchoolName],       
-        ['School Place', student.plusTwoSchoolPlace]
-      ]);
-
-      addFooter();
-
-      // Save the PDF
-      const fileName = `${student.candidateName?.replace(/[^a-zA-Z0-9]/g, '_') || 'Application'}_Form.pdf`;
-      doc.save(fileName);
-
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      alert('An error occurred while generating the PDF. Please try again.');
-    }
-  };
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    alert(`PDF Generation Error: ${error.message || 'Please try again.'}`);
+  }
+};
 
 
   return (

@@ -570,13 +570,13 @@ h1, h2, h3, h4 {
 
 
 .button--outline {
-  background-color: transparent;
-  color: var(--primary-color);
-  border-color: var(--primary-color);
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #374151;
 }
 
 .button--outline:hover {
-  background-color: rgba(67, 97, 238, 0.1);
+  background: #f9fafb;
 }
 
 .button__spinner {
@@ -734,12 +734,30 @@ h1, h2, h3, h4 {
     -webkit-overflow-scrolling: touch;
   }
 
-  .modal__footer {
-    padding: 1rem;
-    position: sticky;
+ .modal__footer {
+    position: fixed;
     bottom: 0;
+    left: 0;
+    right: 0;
     background: white;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    z-index: 10;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .modal__footer-buttons {
+    width: 100%;
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .modal__footer .button {
+    flex: 1;
+    padding: 0.75rem;
+    font-size: 0.875rem;
   }
 
   /* Form improvements */

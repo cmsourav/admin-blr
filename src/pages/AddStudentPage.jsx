@@ -10,7 +10,7 @@ const validateStudent = (student) => {
     "studentId", "candidateName", "candidateNumber",
     "college", "course", "whatsappNumber", "dob",
     "gender", "fatherName", "parentNumber", "adhaarNumber",
-    "place", "reference.userName"
+     "reference.userName"
   ];
 
   requiredFields.forEach((key) => {
@@ -48,22 +48,8 @@ const validateStudent = (student) => {
   return errors;
 };
 
-const Stepper = ({ currentStep }) => (
-  <div className="stepper">
-    <div className={`step ${currentStep === 1 ? "active" : ""}`}>
-      <div className="circle">1</div>
-      <span>Verify</span>
-    </div>
-    <div className={`step ${currentStep === 2 ? "active" : ""}`}>
-      <div className="circle">2</div>
-      <span>Details</span>
-    </div>
-  </div>
-);
-
 const Modal = ({ isOpen, onClose, message }) => {
   if (!isOpen) return null;
-
   return (
     <div className="add_student_modal_overlay">
       <div className="add_student_modal_content">
@@ -105,9 +91,14 @@ const AddStudent = () => {
     gender: "",
     fatherName: "",
     parentNumber: "",
-    alternativeNumber: "",
     adhaarNumber: "",
-    place: "",
+    motherName: "",
+    motherNumber: "",
+    address: "",
+    state: "",
+    district: "",
+    pincode: "",
+    religion: "",
     plusTwoRegNumber: "",
     plusTwoSchoolName: "",
     plusTwoSchoolPlace: "",
@@ -166,7 +157,6 @@ const AddStudent = () => {
               consultancyName: userData.userType === "Freelance Associate"
                 ? ""
                 : userData.consultancyName || ""
-              // Removed automatic setting of userName
             }
           }));
         }
@@ -265,9 +255,14 @@ const AddStudent = () => {
         gender: "",
         fatherName: "",
         parentNumber: "",
-        alternativeNumber: "",
         adhaarNumber: "",
-        place: "",
+        motherName: "",
+        motherNumber: "",
+        address: "",
+        state: "",
+        district: "",
+        pincode: "",
+        religion: "",
         plusTwoRegNumber: "",
         plusTwoSchoolName: "",
         plusTwoSchoolPlace: "",
@@ -469,7 +464,7 @@ const AddStudent = () => {
                       <span className="modern-error-message">{formErrors.course}</span>
                     )}
                   </div>
-                  
+
                   <div className="modern-input-group">
                     <label htmlFor="dateOfAdmission" className="modern-input-label">
                       Date of Admission
@@ -555,6 +550,46 @@ const AddStudent = () => {
                   </div>
 
                   <div className="modern-input-group">
+                    <label htmlFor="adhaarNumber" className="modern-input-label">
+                      Aadhaar Number <span className="modern-required">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="adhaarNumber"
+                      name="adhaarNumber"
+                      value={student.adhaarNumber}
+                      onChange={handleChange}
+                      placeholder="Enter 12-digit Aadhaar number"
+                      className={`modern-input ${formErrors.adhaarNumber ? "error" : ""}`}
+                    />
+                    {formErrors.adhaarNumber && (
+                      <span className="modern-error-message">{formErrors.adhaarNumber}</span>
+                    )}
+                  </div>
+
+                   <div className="modern-input-group">
+                    <label htmlFor="religion" className="modern-input-label">
+                      Religion
+                    </label>
+                    <select
+                      id="religion"
+                      name="religion"
+                      value={student.religion}
+                      onChange={handleChange}
+                      className="modern-input"
+                    >
+                      <option value="">Select Religion</option>
+                      <option value="Hindu">Hindu</option>
+                      <option value="Muslim">Muslim</option>
+                      <option value="Christian">Christian</option>
+                      <option value="Sikh">Sikh</option>
+                      <option value="Buddhist">Buddhist</option>
+                      <option value="Jain">Jain</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+
+                  <div className="modern-input-group">
                     <label htmlFor="fatherName" className="modern-input-label">
                       Father's Name <span className="modern-required">*</span>
                     </label>
@@ -574,7 +609,7 @@ const AddStudent = () => {
 
                   <div className="modern-input-group">
                     <label htmlFor="parentNumber" className="modern-input-label">
-                      Parent's Number <span className="modern-required">*</span>
+                      Father's Number <span className="modern-required">*</span>
                     </label>
                     <input
                       type="text"
@@ -582,7 +617,7 @@ const AddStudent = () => {
                       name="parentNumber"
                       value={student.parentNumber}
                       onChange={handleChange}
-                      placeholder="Enter parent's number"
+                      placeholder="Enter Father's number"
                       className={`modern-input ${formErrors.parentNumber ? "error" : ""}`}
                     />
                     {formErrors.parentNumber && (
@@ -591,54 +626,93 @@ const AddStudent = () => {
                   </div>
 
                   <div className="modern-input-group">
-                    <label htmlFor="alternativeNumber" className="modern-input-label">
-                      Alternative Number
+                    <label htmlFor="motherName" className="modern-input-label">
+                      Mother's Name
                     </label>
                     <input
                       type="text"
-                      id="alternativeNumber"
-                      name="alternativeNumber"
-                      value={student.alternativeNumber}
+                      id="motherName"
+                      name="motherName"
+                      value={student.motherName}
                       onChange={handleChange}
-                      placeholder="Enter alternative number"
+                      placeholder="Enter mother's name"
                       className="modern-input"
                     />
                   </div>
 
                   <div className="modern-input-group">
-                    <label htmlFor="adhaarNumber" className="modern-input-label">
-                      Aadhaar Number <span className="modern-required">*</span>
+                    <label htmlFor="motherNumber" className="modern-input-label">
+                      Mother's Number
                     </label>
                     <input
                       type="text"
-                      id="adhaarNumber"
-                      name="adhaarNumber"
-                      value={student.adhaarNumber}
+                      id="motherNumber"
+                      name="motherNumber"
+                      value={student.motherNumber}
                       onChange={handleChange}
-                      placeholder="Enter 12-digit Aadhaar number"
-                      className={`modern-input ${formErrors.adhaarNumber ? "error" : ""}`}
+                      placeholder="Enter mother's number"
+                      className="modern-input"
                     />
-                    {formErrors.adhaarNumber && (
-                      <span className="modern-error-message">{formErrors.adhaarNumber}</span>
-                    )}
                   </div>
 
                   <div className="modern-input-group">
-                    <label htmlFor="place" className="modern-input-label">
-                      Place <span className="modern-required">*</span>
+                    <label htmlFor="address" className="modern-input-label">
+                      Address
+                    </label>
+                    <textarea
+                      id="address"
+                      name="address"
+                      value={student.address}
+                      onChange={handleChange}
+                      placeholder="Enter full address"
+                      rows="3"
+                      className="modern-textarea"
+                    />
+                  </div>
+
+                  <div className="modern-input-group">
+                    <label htmlFor="state" className="modern-input-label">
+                      State
                     </label>
                     <input
                       type="text"
-                      id="place"
-                      name="place"
-                      value={student.place}
+                      id="state"
+                      name="state"
+                      value={student.state}
                       onChange={handleChange}
-                      placeholder="Enter place of residence"
-                      className={`modern-input ${formErrors.place ? "error" : ""}`}
+                      placeholder="Enter state"
+                      className="modern-input"
                     />
-                    {formErrors.place && (
-                      <span className="modern-error-message">{formErrors.place}</span>
-                    )}
+                  </div>
+
+                  <div className="modern-input-group">
+                    <label htmlFor="district" className="modern-input-label">
+                      District
+                    </label>
+                    <input
+                      type="text"
+                      id="district"
+                      name="district"
+                      value={student.district}
+                      onChange={handleChange}
+                      placeholder="Enter district"
+                      className="modern-input"
+                    />
+                  </div>
+
+                  <div className="modern-input-group">
+                    <label htmlFor="pincode" className="modern-input-label">
+                      Pincode
+                    </label>
+                    <input
+                      type="text"
+                      id="pincode"
+                      name="pincode"
+                      value={student.pincode}
+                      onChange={handleChange}
+                      placeholder="Enter pincode"
+                      className="modern-input"
+                    />
                   </div>
                 </div>
               </div>
@@ -736,7 +810,7 @@ const AddStudent = () => {
                 </div>
               </div>
 
-                {/* Reference Details Section */}
+              {/* Reference Details Section */}
               <div className="modern-form-section">
                 <div className="modern-section-header">
                   <h3 className="modern-section-title">
