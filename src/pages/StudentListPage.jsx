@@ -87,24 +87,24 @@ const StudentList = () => {
   }, [students]);
 
   // Filter and pagination logic
-const filteredStudents = useMemo(() => {
-  let filtered = students;
-  if (searchTerm) {
-    filtered = filtered.filter((s) =>
-      s.candidateName?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }
-  if (statusFilter === "enroll") {
-    filtered = filtered.filter((s) => s.applicationStatus === "enroll");
-  } else if (statusFilter === "enquiry") {
-    filtered = filtered.filter((s) => s.applicationStatus === "enquiry");
-  }
-  if (collegeFilter) {
-    filtered = filtered.filter((s) => s.college === collegeFilter);
-  }
-  setCurrentPage(1);
-  return filtered;
-}, [students, searchTerm, statusFilter, collegeFilter]);
+  const filteredStudents = useMemo(() => {
+    let filtered = students;
+    if (searchTerm) {
+      filtered = filtered.filter((s) =>
+        s.candidateName?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    if (statusFilter === "enroll") {
+      filtered = filtered.filter((s) => s.applicationStatus === "enroll");
+    } else if (statusFilter === "enquiry") {
+      filtered = filtered.filter((s) => s.applicationStatus === "enquiry");
+    }
+    if (collegeFilter) {
+      filtered = filtered.filter((s) => s.college === collegeFilter);
+    }
+    setCurrentPage(1);
+    return filtered;
+  }, [students, searchTerm, statusFilter, collegeFilter]);
 
   const currentStudents = useMemo(() => {
     const startIndex = (currentPage - 1) * studentsPerPage;
@@ -894,141 +894,269 @@ const filteredStudents = useMemo(() => {
   );
 
   const generatePDF = async (student) => {
-    const doc = new jsPDF();
-
-    // Colors
-    const primary = '#D32F2F';
-    const dark = '#212121';
-    const medium = '#616161';
-    const light = '#F5F5F5';
-    const white = '#FFFFFF';
-    const sectionGap = 10;
-    // Page dimensions
-    const pageWidth = 210; // A4 width in mm
-    const margin = 15;
-    const contentWidth = pageWidth - margin * 2;
-    const columnWidth = (contentWidth - 10) / 2; // Space between columns
-
-    // Header with logo or fallback text
     try {
-      doc.addImage(logo, 'JPEG', margin, 10, 40, 20);
-    } catch {
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(16);
-      doc.setTextColor(primary);
-      doc.text('KM FOUNDATION', margin, 20);
+      const doc = new jsPDF();
+
+      // Layout constants
+      const pageWidth = doc.internal.pageSize.getWidth(); // 210mm for A4
+      const pageHeight = doc.internal.pageSize.getHeight(); // 297mm for A4
+      const margin = 15;
+      const contentWidth = pageWidth - margin * 2;
+
+      let y = margin;
+
+      // Modern color palette
+      const colors = {
+        primary: '#2C3E50',    // Dark blue
+        secondary: '#E74C3C',  // Red
+        accent: '#3498DB',     // Blue
+        lightBg: '#F8F9FA',    // Very light gray
+        border: '#E0E0E0',     // Light gray
+        textDark: '#2C3E50',   // Dark text
+        textMedium: '#5D6D7E', // Medium text
+        textLight: '#7F8C8D'   // Light text
+      };
+
+      // Typography
+      const fonts = {
+        normal: 'helvetica',
+        bold: 'helvetica-bold',
+        title: 'helvetica-bold'
+      };
+
+      // Dimensions
+      const dimensions = {
+        fontSize: 10,
+        labelWidth: 45,
+        lineSpacing: 6,
+        rowGap: 4,
+        sectionTitleHeight: 10,
+        fieldHeight: 6
+      };
+
+      // Helper function to check page breaks
+      const checkPageBreak = (requiredHeight = 20) => {
+        if (y + requiredHeight > pageHeight - 30) {
+          addFooter();
+          doc.addPage();
+          y = margin;
+          addHeader();
+          return true;
+        }
+        return false;
+      };
+
+      // Modern header with logo
+      const addHeader = () => {
+        y = margin;
+
+        // Draw a light background strip
+        doc.setFillColor(colors.lightBg);
+        doc.rect(0, 0, pageWidth, 40, 'F');
+
+        // Add logo if provided
+        try {
+          doc.addImage(logo, 'JPEG', margin, 10, 40, 20);
+        } catch {
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(16);
+          doc.setTextColor(primary);
+          doc.text('KM FOUNDATION', margin, 20);
+        }
+
+        // Main title
+        doc.setFont(fonts.title);
+        doc.setFontSize(18);
+        doc.setTextColor(colors.primary);
+        doc.text('APPLICATION FORM', pageWidth / 2, y + 1, { align: 'center' });
+
+        // Application info
+        y += 25;
+        doc.setFontSize(10);
+        doc.setFont(fonts.bold);
+        doc.setTextColor(colors.secondary);
+
+        // const appNo = `APPLICATION NO: ${student.applicationNumber || 'EGI/ECD/2023-24/XXXXX'}`;
+        const date = `APPLICATION DATE: ${student.dateOfAdmission || new Date().toLocaleDateString()}`;
+
+        // doc.text(appNo, margin, y);
+        doc.text(date, pageWidth - margin, y, { align: 'right' });
+
+        y += 10;
+
+        // Divider line
+        // doc.setDrawColor(colors.border);
+        // doc.line(margin, y, pageWidth - margin, y);
+        // y += 8;
+      };
+
+      // Modern footer
+      const addFooter = () => {
+        const footerY = pageHeight - 25;
+        const lineLength = 70;
+
+        doc.setFont(fonts.normal);
+        doc.setFontSize(9);
+        doc.setTextColor(colors.textMedium);
+        doc.setDrawColor(colors.border);
+
+        // Page number
+        doc.setFontSize(8);
+        const pageCount = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+          doc.setPage(i);
+          doc.text(`Page ${i} of ${pageCount}`, pageWidth - margin, pageHeight - 10, { align: 'right' });
+        }
+      };
+
+      // Modern section title
+      const addSectionTitle = (title) => {
+        checkPageBreak(15);
+
+        doc.setFillColor(colors.lightBg);
+        doc.setDrawColor(colors.border);
+        doc.setFontSize(12);
+        doc.setFont(fonts.bold);
+        doc.setTextColor(colors.primary);
+
+        // Section rectangle with subtle border
+        doc.roundedRect(
+          margin,
+          y,
+          contentWidth,
+          dimensions.sectionTitleHeight,
+          2,
+          2,
+          'FD'
+        );
+
+        // Left accent bar
+        doc.setFillColor(colors.secondary);
+        doc.rect(margin, y, 3, dimensions.sectionTitleHeight, 'F');
+
+        doc.text(title, margin + 8, y + 7);
+        y += dimensions.sectionTitleHeight + 8;
+      };
+
+      // Improved field rendering
+      const addField = (label, value, x, yPos, width) => {
+        doc.setFont(fonts.bold);
+        doc.setFontSize(dimensions.fontSize);
+        doc.setTextColor(colors.textDark);
+        doc.text(`${label}:`, x, yPos);
+
+        doc.setFont(fonts.normal);
+        doc.setTextColor(colors.textMedium);
+
+        const textX = x + dimensions.labelWidth;
+        const textWidth = width - dimensions.labelWidth;
+
+        if (value && typeof value === 'string' && value.length > 40) {
+          // Handle long text with text wrapping
+          const lines = doc.splitTextToSize(value || '-', textWidth);
+          doc.text(lines, textX, yPos);
+          return lines.length * dimensions.lineSpacing;
+        } else {
+          doc.text(value || '-', textX, yPos);
+          return dimensions.lineSpacing;
+        }
+      };
+
+      // Modern two-column layout
+      const addTwoColumnFields = (fields) => {
+        const col1X = margin;
+        const col2X = pageWidth / 2;
+        const columnWidth = (pageWidth / 2) - margin - 5;
+
+        for (let i = 0; i < fields.length; i += 2) {
+          const field1 = fields[i];
+          const field2 = i + 1 < fields.length ? fields[i + 1] : null;
+
+          // Calculate required height for both fields
+          let field1Height = dimensions.fieldHeight;
+          let field2Height = dimensions.fieldHeight;
+
+          if (field1 && field1[1] && field1[1].length > 40) {
+            const lines = doc.splitTextToSize(field1[1], columnWidth - dimensions.labelWidth);
+            field1Height = Math.max(dimensions.fieldHeight, lines.length * dimensions.lineSpacing);
+          }
+
+          if (field2 && field2[1] && field2[1].length > 40) {
+            const lines = doc.splitTextToSize(field2[1], columnWidth - dimensions.labelWidth);
+            field2Height = Math.max(dimensions.fieldHeight, lines.length * dimensions.lineSpacing);
+          }
+
+          const rowHeight = Math.max(field1Height, field2Height) + dimensions.rowGap;
+
+          // Check if we need a new page
+          checkPageBreak(rowHeight);
+
+          // Render first field
+          if (field1) {
+            addField(field1[0], field1[1], col1X, y, columnWidth);
+          }
+
+          // Render second field if exists
+          if (field2) {
+            addField(field2[0], field2[1], col2X, y, columnWidth);
+          }
+
+          y += rowHeight;
+        }
+      };
+
+      // ----------------- BEGIN PDF GENERATION -----------------
+      addHeader();
+
+      // College & Course Details
+      addSectionTitle('ENROLLMENT DETAILS');
+      addTwoColumnFields([
+        ['Name', student.candidateName],
+        ['Contact Number', student.candidateNumber],
+        ['Email', student.candidateEmail],
+        ['WhatsApp Number', student.whatsappNumber],
+        ["Parent Number", student.parentNumber],
+        ['Aadhar Number', student.adhaarNumber],
+        ['Course', student.course],
+        ['College Name', student.college],
+      ]);
+
+      // Personal Details
+      addSectionTitle('Personal Details');
+      addTwoColumnFields([
+        ['Date of Birth', student.dob],
+        ['Gender', student.gender],
+        ["Father's Name", student.fatherName],
+        ["Parent Number", student.parentNumber],
+        ["Mother's Name", student.motherName],
+        ["Mother Number", student.alternativeNumber],
+        ['Religion', student.religion],
+        ['Address', student.address],
+        ['State', student.state],
+        ['District', student.district],
+        ['Pin Code', student.pincode]
+      ]);
+
+      // Accadamic Details
+      addSectionTitle('Accadamic Details');
+      addTwoColumnFields([
+        ['Last Qualification', student.lastQualification],
+        ['Mark %', student.lastQualificationMarks],
+        ['+2 Reg.No', student.plusTwoRegNumber],
+        ['+2 School Name', student.plusTwoSchoolName],       
+        ['School Place', student.plusTwoSchoolPlace]
+      ]);
+
+      addFooter();
+
+      // Save the PDF
+      const fileName = `${student.candidateName?.replace(/[^a-zA-Z0-9]/g, '_') || 'Application'}_Form.pdf`;
+      doc.save(fileName);
+
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('An error occurred while generating the PDF. Please try again.');
     }
-
-    // Application details header
-    doc.setFontSize(9);
-    doc.setTextColor(medium);
-    doc.text(`Application No: ${student.studentId}`, pageWidth - margin, 15, { align: 'right' });
-    doc.text(`Date: ${student.dateOfAdmission}`, pageWidth - margin, 20, { align: 'right' });
-
-    // Main title
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(20);
-    doc.setTextColor(dark);
-    doc.text('STUDENT APPLICATION FORM', pageWidth / 2, 38, { align: 'center' });
-
-    // Title underline
-    doc.setDrawColor(primary);
-    doc.setLineWidth(0.5);
-    doc.line(margin, 42, pageWidth - margin, 42);
-
-    // Improved Section Helper
-    const addSection = (title, y) => {
-      doc.setFillColor(primary);
-      doc.rect(margin, y, contentWidth, 8, 'F');
-      doc.setFontSize(10);
-      doc.setTextColor(white);
-      doc.setFont('helvetica', 'bold');
-      doc.text(title, margin + 5, y + 6);
-      return y + 12;
-    };
-
-    // Enhanced Field Helper
-    const addField = (label, value, x, y, maxWidth = 80, labelWidth = 30) => {
-      // Label
-      doc.setFontSize(9);
-      doc.setFont('helvetica', 'bold');
-      doc.setTextColor(dark);
-      doc.text(`${label}:`, x, y);
-
-      // Value
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(medium);
-      const valueText = value?.toString()?.trim() || '-';
-      const lines = doc.splitTextToSize(valueText, maxWidth);
-
-      // Adjust y position based on line count
-      const lineHeight = 5;
-      const valueY = y + (lines.length > 1 ? -2 : 0); // Slight vertical adjustment
-
-      doc.text(lines, x + labelWidth, valueY);
-      return y + (lines.length * lineHeight) + 6;
-    };
-
-    // Personal Details Section
-    let currentY = addSection('PERSONAL DETAILS', 48);
-
-    // First column (left side)
-    let col1Y = currentY;
-    col1Y = addField('Full Name', student.candidateName, margin, col1Y, columnWidth - 35);
-    col1Y = addField('Date of Birth', student.dob, margin, col1Y, columnWidth - 35);
-    col1Y = addField('Gender', student.gender, margin, col1Y, columnWidth - 35);
-    col1Y = addField('Aadhaar Number', student.adhaarNumber, margin, col1Y, columnWidth - 35);
-    col1Y = addField('Location', student.place, margin, col1Y, columnWidth - 35);
-
-    // Second column (right side)
-    let col2Y = currentY;
-    const col2X = margin + columnWidth + 10;
-    col2Y = addField("Father's Name", student.fatherName, col2X, col2Y, columnWidth - 35);
-    col2Y = addField('Contact Number', student.candidateNumber, col2X, col2Y, columnWidth - 35);
-    col2Y = addField('WhatsApp Number', student.whatsappNumber, col2X, col2Y, columnWidth - 35);
-    col2Y = addField('Email', student.candidateEmail, col2X, col2Y, columnWidth - 35);
-    col2Y = addField('Parent Contact', student.parentNumber, col2X, col2Y, columnWidth - 35);
-
-    // Academic Details Section
-    currentY = Math.max(col1Y, col2Y) + sectionGap;
-    currentY = addSection('ACADEMIC DETAILS', currentY);
-
-    col1Y = currentY;
-    col1Y = addField('+2 Registration No', student.plusTwoRegNumber, margin, col1Y, columnWidth - 35);
-    col1Y = addField('+2 School', student.plusTwoSchoolName, margin, col1Y, columnWidth - 35);
-    col1Y = addField('School Location', student.plusTwoSchoolPlace, margin, col1Y, columnWidth - 35);
-
-    col2Y = currentY;
-    col2Y = addField('Last Qualification', student.lastQualification, col2X, col2Y, columnWidth - 35);
-    col2Y = addField('Marks %', student.lastQualificationMarks, col2X, col2Y, columnWidth - 35);
-    col2Y = addField('College', student.college, col2X, col2Y, columnWidth - 35);
-    col2Y = addField('Course', student.course, col2X, col2Y, columnWidth - 35);
-
-    // Reference Section
-    currentY = Math.max(col1Y, col2Y) + sectionGap;
-    currentY = addSection('REFERENCE DETAILS', currentY);
-
-    currentY = addField('Consultancy Name', student.reference.consultancyName, margin, currentY, contentWidth - 10, 35);
-    currentY = addField('User Name', student.reference.userName, margin, currentY, contentWidth - 10, 35);
-    currentY = addField('Total SC', student.reference.totalSC, margin, currentY, contentWidth - 10, 35);
-    currentY = addField('Committed SC', student.reference.committedSC, margin, currentY, contentWidth - 10, 35);
-
-    // Improved Footer
-    doc.setFillColor(primary);
-    doc.rect(0, 287, pageWidth, 13, 'F');
-    doc.setTextColor(white);
-    doc.setFontSize(8);
-    doc.setFont('helvetica', 'bold');
-    doc.text('CONFIDENTIAL DOCUMENT - KM FOUNDATION EDUCATIONAL SERVICES', pageWidth / 2, 294, { align: 'center' });
-
-    // Add page border for polish
-    doc.setDrawColor(light);
-    doc.setLineWidth(0.3);
-    doc.rect(margin / 2, margin / 2, pageWidth - margin, 287 - margin, 'S');
-
-    // Save the PDF
-    const fileName = `${student.candidateName.replace(/[^a-zA-Z0-9]/g, '_')}_Application.pdf`;
-    doc.save(fileName);
   };
 
 

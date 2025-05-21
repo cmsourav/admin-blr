@@ -19,7 +19,7 @@ const Dashboard = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
 
-  const studentsPerPage = 4;
+  const studentsPerPage = 10;
   const navigate = useNavigate();
 
   const handleLogout = () => {
