@@ -100,6 +100,7 @@ const AddStudent = () => {
     pincode: "",
     religion: "",
     plusTwoRegNumber: "",
+    stream: "",
     plusTwoSchoolName: "",
     plusTwoSchoolPlace: "",
     lastQualification: "",
@@ -264,6 +265,7 @@ const AddStudent = () => {
         pincode: "",
         religion: "",
         plusTwoRegNumber: "",
+        stream: "",
         plusTwoSchoolName: "",
         plusTwoSchoolPlace: "",
         lastQualification: "",
@@ -582,9 +584,6 @@ const AddStudent = () => {
                       <option value="Hindu">Hindu</option>
                       <option value="Muslim">Muslim</option>
                       <option value="Christian">Christian</option>
-                      <option value="Sikh">Sikh</option>
-                      <option value="Buddhist">Buddhist</option>
-                      <option value="Jain">Jain</option>
                       <option value="Other">Other</option>
                     </select>
                   </div>
@@ -740,6 +739,21 @@ const AddStudent = () => {
                       value={student.plusTwoRegNumber}
                       onChange={handleChange}
                       placeholder="Enter register number"
+                      className="modern-input"
+                    />
+                  </div>
+
+                  <div className="modern-input-group">
+                    <label htmlFor="plusTwoRegNumber" className="modern-input-label">
+                      Stream
+                    </label>
+                    <input
+                      type="text"
+                      id="stream"
+                      name="stream"
+                      value={student.stream}
+                      onChange={handleChange}
+                      placeholder="Enter stream"
                       className="modern-input"
                     />
                   </div>

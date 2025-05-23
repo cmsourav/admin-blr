@@ -303,7 +303,7 @@ const StudentList = () => {
           <div className="modal__content">
             <div className="form-section">
               {/* Basic Information */}
-              <h3 className="details-section__title">Personal Information</h3>
+              <h3 className="details-section__title">Student Information</h3>
               <div className="form-grid">
                 <div className="form-group">
                   <label className="form-group__label">Student ID</label>
@@ -394,6 +394,45 @@ const StudentList = () => {
                 </div>
 
                 <div className="form-group">
+                  <label className="form-group__label">Aadhaar Number</label>
+                  <input
+                    className="form-outlined-input"
+                    name="adhaarNumber"
+                    value={localStudent.adhaarNumber || ""}
+                    onChange={handleEditChange}
+                    type="text"
+                    pattern="[0-9]{12}"
+                    title="12-digit Aadhaar number"
+                    placeholder="Enter 12-digit Aadhaar number"
+                  />
+                </div>
+
+
+                <div className="form-group">
+                  <label className="form-group__label">Father's Name</label>
+                  <input
+                    className="form-outlined-input"
+                    name="fatherName"
+                    value={localStudent.fatherName || ""}
+                    onChange={handleEditChange}
+                    placeholder="Enter father's name"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-group__label">Father's Phone</label>
+                  <input
+                    className="form-outlined-input"
+                    name="parentNumber"
+                    value={localStudent.parentNumber || ""}
+                    onChange={handleEditChange}
+                    type="tel"
+                    pattern="[0-9]{10}"
+                    placeholder="Enter parent's phone number"
+                  />
+                </div>
+
+                <div className="form-group">
                   <label className="form-group__label">Mother's Name</label>
                   <input
                     className="form-outlined-input"
@@ -478,9 +517,6 @@ const StudentList = () => {
                     <option value="Hindu">Hindu</option>
                     <option value="Muslim">Muslim</option>
                     <option value="Christian">Christian</option>
-                    <option value="Sikh">Sikh</option>
-                    <option value="Buddhist">Buddhist</option>
-                    <option value="Jain">Jain</option>
                     <option value="Other">Other</option>
                   </select>
                 </div>
@@ -539,70 +575,6 @@ const StudentList = () => {
                   />
                 </div>
 
-                {/* Family Information */}
-                <div className="form-group">
-                  <label className="form-group__label">Father's Name</label>
-                  <input
-                    className="form-outlined-input"
-                    name="fatherName"
-                    value={localStudent.fatherName || ""}
-                    onChange={handleEditChange}
-                    placeholder="Enter father's name"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label className="form-group__label">Parent's Phone</label>
-                  <input
-                    className="form-outlined-input"
-                    name="parentNumber"
-                    value={localStudent.parentNumber || ""}
-                    onChange={handleEditChange}
-                    type="tel"
-                    pattern="[0-9]{10}"
-                    placeholder="Enter parent's phone number"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label className="form-group__label">Alternative Number</label>
-                  <input
-                    className="form-outlined-input"
-                    name="alternativeNumber"
-                    value={localStudent.alternativeNumber || ""}
-                    onChange={handleEditChange}
-                    type="tel"
-                    pattern="[0-9]{10}"
-                    placeholder="Enter alternative number"
-                  />
-                </div>
-
-                {/* Address Information */}
-                <div className="form-group">
-                  <label className="form-group__label">Place</label>
-                  <input
-                    className="form-outlined-input"
-                    name="place"
-                    value={localStudent.place || ""}
-                    onChange={handleEditChange}
-                    placeholder="Enter city/town"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label className="form-group__label">Aadhaar Number</label>
-                  <input
-                    className="form-outlined-input"
-                    name="adhaarNumber"
-                    value={localStudent.adhaarNumber || ""}
-                    onChange={handleEditChange}
-                    type="text"
-                    pattern="[0-9]{12}"
-                    title="12-digit Aadhaar number"
-                    placeholder="Enter 12-digit Aadhaar number"
-                  />
-                </div>
-
                 {/* Academic Information */}
                 <div className="form-group">
                   <label className="form-group__label">+2 Reg Number</label>
@@ -612,6 +584,17 @@ const StudentList = () => {
                     value={localStudent.plusTwoRegNumber || ""}
                     onChange={handleEditChange}
                     placeholder="Enter +2 registration number"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-group__label">Stream</label>
+                  <input
+                    className="form-outlined-input"
+                    name="stream"
+                    value={localStudent.stream || ""}
+                    onChange={handleEditChange}
+                    placeholder="Enter stream"
                   />
                 </div>
 
@@ -915,6 +898,11 @@ const StudentList = () => {
               </div>
 
               <div className="details-item">
+                <span className="details-item__label">Stream</span>
+                <span className="details-item__value">{selectedStudent.stream || "N/A"}</span>
+              </div>
+
+              <div className="details-item">
                 <span className="details-item__label">+2 School Name</span>
                 <span className="details-item__value">{selectedStudent.plusTwoSchoolName || "N/A"}</span>
               </div>
@@ -1006,277 +994,437 @@ const StudentList = () => {
     </div>
   );
 
-const generatePDF = async (student) => {
-  try {
-    const doc = new jsPDF();
+  // const generatePDF = async (student) => {
+  //   try {
+  // const doc = new jsPDF({
+  //   unit: 'mm',
+  //   format: 'a4',
+  //   putOnlyUsedFonts: true,
+  //   hotfixes: ['px_scaling']
+  // });
+  //     // const doc = new jsPDF();
 
-    // Layout constants
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
-    const margin = 15;
-    const contentWidth = pageWidth - margin * 2;
-    const columnGap = 10;
+  //     // Design Constants
+  //     const pageWidth = doc.internal.pageSize.getWidth();
+  //     const pageHeight = doc.internal.pageSize.getHeight();
+  //     const margin = 15;
+  //     const contentWidth = pageWidth - margin * 2;
+  //     const columnGap = 12;
 
-    let y = margin;
-    let isFirstPage = true; // Track if we're on the first page
+  //     // Color Scheme
+  //     const colors = {
+  //       primary: '#3498DB',
+  //       secondary: '#2C3E50',
+  //       accent: '#E74C3C',
+  //       textDark: '#2C3E50',
+  //       textMedium: '#7F8C8D',
+  //       border: '#ECF0F1'
+  //     };
 
-    // Modern color palette
-    const colors = {
-      primary: '#2C3E50',
-      secondary: '#E74C3C',
-      accent: '#3498DB',
-      lightBg: '#F8F9FA',
-      border: '#E0E0E0',
-      textDark: '#2C3E50',
-      textMedium: '#5D6D7E',
-      textLight: '#7F8C8D'
-    };
+  //     // Typography
+  //     const fonts = {
+  //       normal: 'helvetica',
+  //       bold: 'helvetica-bold',
+  //       title: 'helvetica-bold'
+  //     };
 
-    // Typography
-    const fonts = {
-      normal: 'helvetica',
-      bold: 'helvetica-bold',
-      title: 'helvetica-bold'
-    };
+  //     let y = margin;
 
-    // Dimensions
-    const dimensions = {
-      fontSize: 10,
-      labelWidth: 50,
-      lineSpacing: 6,
-      rowGap: 6,
-      sectionTitleHeight: 10,
-      fieldHeight: 8,
-      headerHeight: 40,
-      footerHeight: 25,
-      minColumnWidth: 70
-    };
+  //     // Dynamic field height calculator
+  //     const calculateFieldHeight = (text, maxWidth) => {
+  //       const lines = doc.splitTextToSize(text || '-', maxWidth);
+  //       return Math.max(1, lines.length) * 5; // 5px per line
+  //     };
 
-    // Improved page break checker
-    const checkPageBreak = (requiredHeight = 20) => {
-      const buffer = 5;
-      if (y + requiredHeight + buffer > pageHeight - dimensions.footerHeight) {
-        addFooter();
-        doc.addPage();
-        y = margin;
-        isFirstPage = false; // No longer on first page
-        return true;
-      }
-      return false;
-    };
+  //     // Header with dynamic positioning
+  //     const addHeader = () => {
+  //       doc.setFillColor(colors.primary);
+  //       doc.rect(0, 0, pageWidth, 8, 'F');
 
-    // Header - only shown on first page
-    const addHeader = () => {
-      if (!isFirstPage) return; // Skip if not first page
-      
-      y = margin;
+  //       doc.setFont(fonts.title);
+  //       doc.setFontSize(18);
+  //       doc.setTextColor(colors.secondary);
+  //       doc.text('STUDENT APPLICATION FORM', margin, y + 15);
 
-      // Header background
-      doc.setFillColor(colors.lightBg);
-      doc.rect(0, 0, pageWidth, dimensions.headerHeight, 'F');
+  //       doc.setFontSize(10);
+  //       doc.setTextColor(colors.textMedium);
+  //       doc.text(`Generated: ${new Date().toLocaleDateString()}`, pageWidth - margin, y + 15, { align: 'right' });
 
-      // Logo/Title
-      try {
-        doc.addImage(logo, 'JPEG', margin, 10, 40, 20);
-      } catch {
-        doc.setFont(fonts.title, 'bold');
-        doc.setFontSize(16);
-        doc.setTextColor(colors.primary);
-        doc.text('KM FOUNDATION', margin, 20);
-      }
+  //       y += 25;
+  //     };
 
-      // Main title
-      doc.setFont(fonts.title);
-      doc.setFontSize(18);
-      doc.setTextColor(colors.primary);
-      doc.text('APPLICATION FORM', pageWidth / 2, y + 20, { align: 'center' });
+  //     // Smart section creator with dynamic spacing
+  //     const addSection = (title, fields) => {
+  //       // Check if we need more space (20px buffer)
+  //       if (y > pageHeight - 50) {
+  //         doc.addPage();
+  //         y = margin;
+  //       }
 
-      // Application date
-      y += 25;
-      doc.setFontSize(10);
-      doc.setFont(fonts.bold);
-      doc.setTextColor(colors.secondary);
-      const date = `APPLICATION DATE: ${student.dateOfAdmission || formatDate(new Date())}`;
-      doc.text(date, pageWidth - margin, y, { align: 'right' });
+  //       doc.setFont(fonts.bold);
+  //       doc.setFontSize(12);
+  //       doc.setTextColor(colors.primary);
+  //       doc.text(title, margin, y + 5);
+  //       doc.setDrawColor(colors.border);
+  //       doc.line(margin, y + 7, margin + 40, y + 7);
 
-      y += 12;
-    };
+  //       y += 15;
 
-    // Format date consistently
-    const formatDate = (dateString) => {
-      try {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-IN', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric'
-        });
-      } catch {
-        return new Date().toLocaleDateString('en-IN');
-      }
-    };
+  //       addDynamicFields(fields);
+  //       y += 10; // Section bottom margin
+  //     };
 
-    // Footer - shown on all pages
-    const addFooter = () => {
-      const footerY = pageHeight - dimensions.footerHeight;
-      
-      // Divider line
-      doc.setDrawColor(colors.border);
-      doc.line(margin, footerY, pageWidth - margin, footerY);
-      
-      // Footer content
-      doc.setFont(fonts.normal);
-      doc.setFontSize(8);
-      doc.setTextColor(colors.textMedium);
-      
-      const pageCount = doc.internal.getNumberOfPages();
-      for (let i = 1; i <= pageCount; i++) {
-        doc.setPage(i);
-        doc.text('© KM Foundation - All Rights Reserved', margin, pageHeight - 10);
-        doc.text(`Page ${i} of ${pageCount}`, pageWidth - margin, pageHeight - 10, { align: 'right' });
-      }
-    };
+  //     // Dynamic field layout manager
+  //     const addDynamicFields = (fields) => {
+  //       const columnWidth = (contentWidth - columnGap) / 2;
+  //       let currentY = y;
+  //       let maxHeight = 0;
 
-    // Section titles
-    const addSectionTitle = (title) => {
-      checkPageBreak(20);
+  //       for (let i = 0; i < fields.length; i++) {
+  //         const field = fields[i];
+  //         if (!field) continue;
 
-      doc.setFillColor(colors.lightBg);
-      doc.setDrawColor(colors.border);
-      doc.setFontSize(12);
-      doc.setFont(fonts.bold);
-      doc.setTextColor(colors.primary);
+  //         const [label, value] = field;
+  //         const xPos = i % 2 === 0 ? margin : margin + columnWidth + columnGap;
+  //         const isNewRow = i % 2 === 0;
 
-      doc.roundedRect(
-        margin,
-        y,
-        contentWidth,
-        dimensions.sectionTitleHeight,
-        2,
-        2,
-        'FD'
-      );
+  //         if (isNewRow && i > 0) {
+  //           currentY += maxHeight + 8; // Dynamic row spacing
+  //           maxHeight = 0;
+  //         }
 
-      doc.setFillColor(colors.secondary);
-      doc.rect(margin, y, 3, dimensions.sectionTitleHeight, 'F');
+  //         const labelHeight = calculateFieldHeight(label, columnWidth * 0.4);
+  //         const valueHeight = calculateFieldHeight(value, columnWidth * 0.6);
+  //         const fieldHeight = Math.max(labelHeight, valueHeight);
 
-      doc.text(title, margin + 8, y + 7);
-      y += dimensions.sectionTitleHeight + 10;
-    };
+  //         // Check page break
+  //         if (currentY + fieldHeight > pageHeight - 20) {
+  //           doc.addPage();
+  //           currentY = margin;
+  //           maxHeight = 0;
+  //         }
 
-    // Field rendering
-    const addField = (label, value, x, yPos, width) => {
-      const effectiveLabelWidth = Math.min(dimensions.labelWidth, width * 0.4);
-      const textWidth = width - effectiveLabelWidth - 2;
-      
-      doc.setFont(fonts.bold);
-      doc.setFontSize(dimensions.fontSize);
-      doc.setTextColor(colors.textDark);
-      
-      const labelLines = doc.splitTextToSize(label + ':', effectiveLabelWidth);
-      doc.text(labelLines, x, yPos);
-      
-      doc.setFont(fonts.normal);
-      doc.setTextColor(colors.textMedium);
-      
-      const textX = x + effectiveLabelWidth + 2;
-      const formattedValue = value !== undefined && value !== null ? String(value) : '-';
-      const valueLines = doc.splitTextToSize(formattedValue, textWidth);
-      
-      doc.text(valueLines, textX, yPos);
-      
-      return Math.max(labelLines.length, valueLines.length) * dimensions.lineSpacing;
-    };
+  //         // Draw field
+  //         doc.setFont(fonts.bold);
+  //         doc.setFontSize(9);
+  //         doc.setTextColor(colors.textDark);
+  //         doc.text(label + ':', xPos, currentY + 5);
 
-    // Two-column layout
-    const addTwoColumnFields = (fields) => {
-      const availableWidth = contentWidth - columnGap;
-      const columnWidth = availableWidth / 2;
-      
-      if (columnWidth < dimensions.minColumnWidth * 2 + columnGap) {
-        for (const field of fields) {
-          if (!field) continue;
-          const height = addField(field[0], field[1], margin, y, contentWidth);
-          y += height + dimensions.rowGap;
-          checkPageBreak(10);
+  //         doc.setFont(fonts.normal);
+  //         doc.setTextColor(colors.textMedium);
+  //         const valueLines = doc.splitTextToSize(value || '-', columnWidth * 0.6);
+  //         doc.text(valueLines, xPos + 30, currentY + 5);
+
+  //         // Track tallest field in current row
+  //         maxHeight = Math.max(maxHeight, fieldHeight);
+  //       }
+
+  //       y = currentY + maxHeight;
+  //     };
+
+  //     // Format date
+  //     const formatDate = (dateString) => {
+  //       try {
+  //         return new Date(dateString).toLocaleDateString('en-IN');
+  //       } catch {
+  //         return 'N/A';
+  //       }
+  //     };
+
+  //     // ----------------- PDF GENERATION -----------------
+  //     addHeader();
+
+  //     // Personal Details (with dynamic height)
+  //     addSection('Personal Information', [
+  //       ['Full Name', student.candidateName],
+  //       ['Date of Birth', formatDate(student.dob)],
+  //       ['Contact Number', student.candidateNumber],
+  //       ['Email Address', student.candidateEmail],
+  //       ['Aadhar Number', student.adhaarNumber],
+  //       ['Gender', student.gender]
+  //     ]);
+
+  //     // Contact Information
+  //     addSection('Contact Details', [
+  //       ['Full Address', student.address],
+  //       ['City/District', student.district],
+  //       ['State', student.state],
+  //       ['PIN Code', student.pincode],
+  //       ['WhatsApp Number', student.whatsappNumber],
+  //       ['Parent Contact', student.parentNumber]
+  //     ]);
+
+  //     // Academic Information
+  //     addSection('Academic Background', [
+  //       ['Current Course', student.course],
+  //       ['College/University', student.college],
+  //       ['Highest Qualification', student.lastQualification],
+  //       ['Percentage/Grade', student.lastQualificationMarks],
+  //       ['+2 School', student.plusTwoSchoolName],
+  //       ['+2 Registration', student.plusTwoRegNumber]
+  //     ]);
+
+  //     // Family Information
+  //     addSection('Family Details', [
+  //       ["Father's Name", student.fatherName],
+  //       ["Father's Contact", student.parentNumber],
+  //       ["Mother's Name", student.motherName],
+  //       ["Mother's Contact", student.alternativeNumber],
+  //       ['Religion', student.religion]
+  //     ]);
+
+  //     // Footer with dynamic positioning
+  //     y = Math.max(y, pageHeight - 20);
+  //     doc.setFontSize(9);
+  //     doc.setTextColor(colors.textMedium);
+  //     doc.text('Student Signature: ___________________', margin, y);
+  //     doc.text('© KM Foundation', pageWidth - margin, y, { align: 'right' });
+
+  //     // Save PDF
+  //     const fileName = `Application_${(student.candidateName || 'Student').replace(/[^a-z0-9]/gi, '_')}.pdf`;
+  //     doc.save(fileName);
+
+  //   } catch (error) {
+  //     console.error('PDF Generation Error:', error);
+  //     alert('Failed to generate PDF. Please try again.');
+  //   }
+  // };
+
+  const generatePDF = async (student) => {
+    try {
+      const doc = new jsPDF({
+        unit: 'mm',
+        format: 'a4',
+        putOnlyUsedFonts: true,
+        hotfixes: ['px_scaling']
+      });
+
+      // Design Constants with Red/Black Theme
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 10;
+      const contentWidth = pageWidth - margin * 2;
+      const columnGap = 10;
+
+      // Red and Black Color Scheme
+      const colors = {
+        primary: '#D32F2F',    // Dark Red
+        secondary: '#212121',  // Dark Black
+        accent: '#F44336',     // Bright Red
+        lightBg: '#FFEBEE',    // Light Red Background
+        textDark: '#212121',   // Black Text
+        textMedium: '#616161'  // Gray Text
+      };
+
+      // Typography
+      const fonts = {
+        normal: 'helvetica',
+        bold: 'helvetica-bold',
+        title: 'helvetica-bold'
+      };
+
+      let y = margin;
+
+      // Add Header with Company Logo
+      const addHeader = () => {
+        // Red Accent Bar
+        doc.setFillColor(colors.primary);
+        doc.rect(0, 0, pageWidth, 8, 'F');
+
+        try {
+          const logoWidth = 40;
+          const logoHeight = 20;
+          doc.addImage(logo, 'PNG', margin, y, logoWidth, logoHeight);
+          y += logoHeight;
+        } catch (e) {
+          // Fallback text if logo fails
+          doc.setFont(fonts.title);
+          doc.setFontSize(20);
+          doc.setTextColor(colors.primary);
+          doc.text('KM FOUNDATION', margin, y + 15);
+          y += 20;
         }
-        return;
-      }
-      
-      const col1X = margin;
-      const col2X = margin + columnWidth + columnGap;
 
-      for (let i = 0; i < fields.length; i += 2) {
-        const field1 = fields[i];
-        const field2 = i + 1 < fields.length ? fields[i + 1] : null;
+        // Document Title
+        doc.setFont(fonts.title);
+        doc.setFontSize(16);
+        doc.setTextColor(colors.secondary);
+        doc.text('APPLICATION FORM', pageWidth / 2, y + 5, { align: 'center' });
 
-        if (!field1) continue;
+        y += 10;
+      };
 
-        const field1Height = addField(field1[0], field1[1], col1X, y, columnWidth);
-        const field2Height = field2 ? addField(field2[0], field2[1], col2X, y, columnWidth) : 0;
-        
-        const rowHeight = Math.max(field1Height, field2Height) + dimensions.rowGap;
-        
-        checkPageBreak(rowHeight);
-        y += rowHeight;
-      }
-    };
+      // const addHeader = () => {
+      //   doc.setFont('helvetica', 'bold');
+      // doc.setFontSize(16);
+      // doc.text('Educational Consultancy Application', 105, 20, { align: 'center' });
 
-    // ----------------- BEGIN PDF GENERATION -----------------
-    addHeader(); // Only added on first page
+      // // Subtitle
+      // doc.setFontSize(11);
+      // doc.setFont('helvetica', 'normal');
+      // doc.text('Academic Year: 2025-26', 105, 28, { align: 'center' });
 
-    // Enrollment Details
-    addSectionTitle('ENROLLMENT DETAILS');
-    addTwoColumnFields([
-      ['Name', student.candidateName],
-      ['Contact Number', student.candidateNumber],
-      ['Email', student.candidateEmail],
-      ['WhatsApp Number', student.whatsappNumber],
-      ["Parent's Contact", student.parentNumber],
-      ['Aadhar Number', student.adhaarNumber],
-      ['Course Program', student.course],
-      ['College/University', student.college],
-    ]);
+      // // Horizontal line
+      // doc.setLineWidth(0.5);
+      // doc.line(10, 32, 200, 32)
 
-    // Personal Details
-    addSectionTitle('PERSONAL DETAILS');
-    addTwoColumnFields([
-      ['Date of Birth', formatDate(student.dob)],
-      ['Gender', student.gender],
-      ["Father's Name", student.fatherName],
-      ["Father's Contact", student.parentNumber],
-      ["Mother's Name", student.motherName],
-      ["Mother's Contact", student.alternativeNumber],
-      ['Religion', student.religion],
-      ['Full Address', student.address],
-      ['State', student.state],
-      ['District', student.district],
-      ['PIN Code', student.pincode]
-    ]);
+      // y += 20;
+      // }
 
-    // Academic Details
-    addSectionTitle('ACADEMIC DETAILS');
-    addTwoColumnFields([
-      ['Highest Qualification', student.lastQualification],
-      ['Percentage/Grade', student.lastQualificationMarks],
-      ['+2 Registration No', student.plusTwoRegNumber],
-      ['+2 School/College', student.plusTwoSchoolName],
-      ['School Location', student.plusTwoSchoolPlace]
-    ]);
+      // Dynamic field height calculator
+      const calculateFieldHeight = (text, maxWidth) => {
+        const lines = doc.splitTextToSize(text || '-', maxWidth);
+        return Math.max(1, lines.length) * 3;
+      };
 
+      // Section with Red/Black styling
+      const addSection = (title, fields) => {
+        // Check page space
+        if (y > pageHeight - 50) {
+          doc.addPage();
+          y = margin;
+        }
 
+        // Section Title with Red accent
+        doc.setFont(fonts.bold);
+        doc.setFontSize(12);
+        doc.setTextColor(colors.primary);
+        doc.text(title.toUpperCase(), margin, y + 5);
 
-    addFooter(); // Added to all pages
+        // Black underline
+        doc.setDrawColor(colors.secondary);
+        doc.line(margin, y + 7, margin + 40, y + 7);
 
-    // Save the PDF
-    const fileName = `${(student.candidateName || 'Application').replace(/[^a-zA-Z0-9-]/g, '_')}_Form.pdf`;
-    doc.save(fileName);
+        y += 15;
 
-  } catch (error) {
-    console.error('Error generating PDF:', error);
-    alert(`PDF Generation Error: ${error.message || 'Please try again.'}`);
-  }
-};
+        addDynamicFields(fields);
+        y += 10;
+      };
+
+      // Dynamic fields with proper spacing
+      const addDynamicFields = (fields) => {
+        const columnWidth = (contentWidth - columnGap) / 2;
+        let currentY = y;
+        let maxHeight = 0;
+
+        for (let i = 0; i < fields.length; i++) {
+          const field = fields[i];
+          if (!field) continue;
+
+          const [label, value] = field;
+          const xPos = i % 2 === 0 ? margin : margin + columnWidth + columnGap;
+          const isNewRow = i % 2 === 0;
+
+          if (isNewRow && i > 0) {
+            currentY += maxHeight + 8;
+            maxHeight = 0;
+          }
+
+          const labelHeight = calculateFieldHeight(label, columnWidth * 0.4);
+          const valueHeight = calculateFieldHeight(value, columnWidth * 0.6);
+          const fieldHeight = Math.max(labelHeight, valueHeight);
+
+          // Page break check
+          if (currentY + fieldHeight > pageHeight - 20) {
+            doc.addPage();
+            currentY = margin;
+            maxHeight = 0;
+          }
+
+          // Draw field - Black labels
+          doc.setFont(fonts.bold);
+          doc.setFontSize(9);
+          doc.setTextColor(colors.secondary);
+          doc.text(label + ':', xPos, currentY + 5);
+
+          // Red values
+          doc.setFont(fonts.normal);
+          doc.setTextColor(colors.secondary);
+          const valueLines = doc.splitTextToSize(value || '-', columnWidth * 0.6);
+          doc.text(valueLines, xPos + 30, currentY + 5);
+
+          maxHeight = Math.max(maxHeight, fieldHeight);
+        }
+
+        y = currentY + maxHeight;
+      };
+
+      // Format date
+      const formatDate = (dateString) => {
+        try {
+          return new Date(dateString).toLocaleDateString('en-IN');
+        } catch {
+          return 'N/A';
+        }
+      };
+
+      // ----------------- PDF GENERATION -----------------
+      addHeader();
+
+      // ENROLLMENT Details
+      addSection('ENROLLMENT DETAILS', [
+        ['Name', student.candidateName],
+        ['Contact Number', student.candidateNumber],
+        ['Email', student.candidateEmail],
+        ['WhatsApp Number', student.whatsappNumber],
+        ["Parent's Contact", student.parentNumber],
+        ['Aadhar Number', student.adhaarNumber],
+        ['Course Program', student.course],
+        ['College/University', student.college],
+      ]);
+
+      // Personal Details
+      addSection('PERSONAL DETAILS', [
+        ['Date of Birth', formatDate(student.dob)],
+        ['Gender', student.gender],
+        ["Father's Name", student.fatherName],
+        ["Father's Contact", student.parentNumber],
+        ["Mother's Name", student.motherName],
+        ["Mother's Contact", student.alternativeNumber],
+        ['Religion', student.religion],
+        ['Address', student.address],
+        ['State', student.state],
+        ['District', student.district],
+        ['PIN Code', student.pincode]
+      ]);
+
+      // Academic Information
+      addSection('ACADEMIC DETAILS', [
+        ['Highest Qualification', student.lastQualification],
+        ['Percentage/Grade', student.lastQualificationMarks],
+        ['+2 Registration No', student.plusTwoRegNumber],
+         ['+2 Stream', student.stream],
+        ['+2 School/College', student.plusTwoSchoolName],
+        ['School Location', student.plusTwoSchoolPlace]
+      ]);
+
+      // Family Information
+      addSection('Family Details', [
+        ["Father's Name", student.fatherName],
+        ["Father's Contact", student.parentNumber],
+        ["Mother's Name", student.motherName],
+        ["Mother's Contact", student.alternativeNumber],
+        ['Religion', student.religion]
+      ]);
+
+      // Footer with Red/Black styling
+      y = Math.max(y, pageHeight - 20);
+      doc.setDrawColor(colors.primary);
+      doc.line(margin, y, pageWidth - margin, y);
+
+      doc.setFontSize(9);
+      doc.setTextColor(colors.secondary);
+      doc.text('© KM Foundation', pageWidth - margin, y + 10, { align: 'right' });
+
+      // Save PDF
+      const fileName = `${(student.candidateName || 'Application').replace(/[^a-zA-Z0-9-]/g, '_')}_Form.pdf`;
+      doc.save(fileName);
+
+    } catch (error) {
+      console.error('PDF Generation Error:', error);
+      alert('Failed to generate PDF. Please try again.');
+    }
+  };
 
 
   return (
