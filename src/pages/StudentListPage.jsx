@@ -25,6 +25,8 @@ const StudentList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [collegeFilter, setCollegeFilter] = useState("");
+  const [referenceFilter, setReferenceFilter] = useState("");
+  const [courseFilter, setCourseFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const studentsPerPage = 9;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -86,6 +88,28 @@ const StudentList = () => {
     return Array.from(colleges).sort();
   }, [students]);
 
+  // Get unique reference names for filter
+  const referenceOptions = useMemo(() => {
+    const references = new Set();
+    students.forEach(student => {
+      if (student.reference?.userName) {
+        references.add(student.reference.userName);
+      }
+    });
+    return Array.from(references).sort();
+  }, [students]);
+
+  // Get unique courses for filter
+  const courseOptions = useMemo(() => {
+    const courses = new Set();
+    students.forEach(student => {
+      if (student.course) {
+        courses.add(student.course);
+      }
+    });
+    return Array.from(courses).sort();
+  }, [students]);
+
   // Filter and pagination logic
   const filteredStudents = useMemo(() => {
     let filtered = students;
@@ -102,9 +126,17 @@ const StudentList = () => {
     if (collegeFilter) {
       filtered = filtered.filter((s) => s.college === collegeFilter);
     }
+    if (referenceFilter) {
+      filtered = filtered.filter((s) => 
+        s.reference?.userName === referenceFilter
+      );
+    }
+    if (courseFilter) {
+      filtered = filtered.filter((s) => s.course === courseFilter);
+    }
     setCurrentPage(1);
     return filtered;
-  }, [students, searchTerm, statusFilter, collegeFilter]);
+  }, [students, searchTerm, statusFilter, collegeFilter, referenceFilter, courseFilter]);
 
   const currentStudents = useMemo(() => {
     const startIndex = (currentPage - 1) * studentsPerPage;
@@ -994,202 +1026,6 @@ const StudentList = () => {
     </div>
   );
 
-  // const generatePDF = async (student) => {
-  //   try {
-  // const doc = new jsPDF({
-  //   unit: 'mm',
-  //   format: 'a4',
-  //   putOnlyUsedFonts: true,
-  //   hotfixes: ['px_scaling']
-  // });
-  //     // const doc = new jsPDF();
-
-  //     // Design Constants
-  //     const pageWidth = doc.internal.pageSize.getWidth();
-  //     const pageHeight = doc.internal.pageSize.getHeight();
-  //     const margin = 15;
-  //     const contentWidth = pageWidth - margin * 2;
-  //     const columnGap = 12;
-
-  //     // Color Scheme
-  //     const colors = {
-  //       primary: '#3498DB',
-  //       secondary: '#2C3E50',
-  //       accent: '#E74C3C',
-  //       textDark: '#2C3E50',
-  //       textMedium: '#7F8C8D',
-  //       border: '#ECF0F1'
-  //     };
-
-  //     // Typography
-  //     const fonts = {
-  //       normal: 'helvetica',
-  //       bold: 'helvetica-bold',
-  //       title: 'helvetica-bold'
-  //     };
-
-  //     let y = margin;
-
-  //     // Dynamic field height calculator
-  //     const calculateFieldHeight = (text, maxWidth) => {
-  //       const lines = doc.splitTextToSize(text || '-', maxWidth);
-  //       return Math.max(1, lines.length) * 5; // 5px per line
-  //     };
-
-  //     // Header with dynamic positioning
-  //     const addHeader = () => {
-  //       doc.setFillColor(colors.primary);
-  //       doc.rect(0, 0, pageWidth, 8, 'F');
-
-  //       doc.setFont(fonts.title);
-  //       doc.setFontSize(18);
-  //       doc.setTextColor(colors.secondary);
-  //       doc.text('STUDENT APPLICATION FORM', margin, y + 15);
-
-  //       doc.setFontSize(10);
-  //       doc.setTextColor(colors.textMedium);
-  //       doc.text(`Generated: ${new Date().toLocaleDateString()}`, pageWidth - margin, y + 15, { align: 'right' });
-
-  //       y += 25;
-  //     };
-
-  //     // Smart section creator with dynamic spacing
-  //     const addSection = (title, fields) => {
-  //       // Check if we need more space (20px buffer)
-  //       if (y > pageHeight - 50) {
-  //         doc.addPage();
-  //         y = margin;
-  //       }
-
-  //       doc.setFont(fonts.bold);
-  //       doc.setFontSize(12);
-  //       doc.setTextColor(colors.primary);
-  //       doc.text(title, margin, y + 5);
-  //       doc.setDrawColor(colors.border);
-  //       doc.line(margin, y + 7, margin + 40, y + 7);
-
-  //       y += 15;
-
-  //       addDynamicFields(fields);
-  //       y += 10; // Section bottom margin
-  //     };
-
-  //     // Dynamic field layout manager
-  //     const addDynamicFields = (fields) => {
-  //       const columnWidth = (contentWidth - columnGap) / 2;
-  //       let currentY = y;
-  //       let maxHeight = 0;
-
-  //       for (let i = 0; i < fields.length; i++) {
-  //         const field = fields[i];
-  //         if (!field) continue;
-
-  //         const [label, value] = field;
-  //         const xPos = i % 2 === 0 ? margin : margin + columnWidth + columnGap;
-  //         const isNewRow = i % 2 === 0;
-
-  //         if (isNewRow && i > 0) {
-  //           currentY += maxHeight + 8; // Dynamic row spacing
-  //           maxHeight = 0;
-  //         }
-
-  //         const labelHeight = calculateFieldHeight(label, columnWidth * 0.4);
-  //         const valueHeight = calculateFieldHeight(value, columnWidth * 0.6);
-  //         const fieldHeight = Math.max(labelHeight, valueHeight);
-
-  //         // Check page break
-  //         if (currentY + fieldHeight > pageHeight - 20) {
-  //           doc.addPage();
-  //           currentY = margin;
-  //           maxHeight = 0;
-  //         }
-
-  //         // Draw field
-  //         doc.setFont(fonts.bold);
-  //         doc.setFontSize(9);
-  //         doc.setTextColor(colors.textDark);
-  //         doc.text(label + ':', xPos, currentY + 5);
-
-  //         doc.setFont(fonts.normal);
-  //         doc.setTextColor(colors.textMedium);
-  //         const valueLines = doc.splitTextToSize(value || '-', columnWidth * 0.6);
-  //         doc.text(valueLines, xPos + 30, currentY + 5);
-
-  //         // Track tallest field in current row
-  //         maxHeight = Math.max(maxHeight, fieldHeight);
-  //       }
-
-  //       y = currentY + maxHeight;
-  //     };
-
-  //     // Format date
-  //     const formatDate = (dateString) => {
-  //       try {
-  //         return new Date(dateString).toLocaleDateString('en-IN');
-  //       } catch {
-  //         return 'N/A';
-  //       }
-  //     };
-
-  //     // ----------------- PDF GENERATION -----------------
-  //     addHeader();
-
-  //     // Personal Details (with dynamic height)
-  //     addSection('Personal Information', [
-  //       ['Full Name', student.candidateName],
-  //       ['Date of Birth', formatDate(student.dob)],
-  //       ['Contact Number', student.candidateNumber],
-  //       ['Email Address', student.candidateEmail],
-  //       ['Aadhar Number', student.adhaarNumber],
-  //       ['Gender', student.gender]
-  //     ]);
-
-  //     // Contact Information
-  //     addSection('Contact Details', [
-  //       ['Full Address', student.address],
-  //       ['City/District', student.district],
-  //       ['State', student.state],
-  //       ['PIN Code', student.pincode],
-  //       ['WhatsApp Number', student.whatsappNumber],
-  //       ['Parent Contact', student.parentNumber]
-  //     ]);
-
-  //     // Academic Information
-  //     addSection('Academic Background', [
-  //       ['Current Course', student.course],
-  //       ['College/University', student.college],
-  //       ['Highest Qualification', student.lastQualification],
-  //       ['Percentage/Grade', student.lastQualificationMarks],
-  //       ['+2 School', student.plusTwoSchoolName],
-  //       ['+2 Registration', student.plusTwoRegNumber]
-  //     ]);
-
-  //     // Family Information
-  //     addSection('Family Details', [
-  //       ["Father's Name", student.fatherName],
-  //       ["Father's Contact", student.parentNumber],
-  //       ["Mother's Name", student.motherName],
-  //       ["Mother's Contact", student.alternativeNumber],
-  //       ['Religion', student.religion]
-  //     ]);
-
-  //     // Footer with dynamic positioning
-  //     y = Math.max(y, pageHeight - 20);
-  //     doc.setFontSize(9);
-  //     doc.setTextColor(colors.textMedium);
-  //     doc.text('Student Signature: ___________________', margin, y);
-  //     doc.text('© KM Foundation', pageWidth - margin, y, { align: 'right' });
-
-  //     // Save PDF
-  //     const fileName = `Application_${(student.candidateName || 'Student').replace(/[^a-z0-9]/gi, '_')}.pdf`;
-  //     doc.save(fileName);
-
-  //   } catch (error) {
-  //     console.error('PDF Generation Error:', error);
-  //     alert('Failed to generate PDF. Please try again.');
-  //   }
-  // };
-
   const generatePDF = async (student) => {
     try {
       const doc = new jsPDF({
@@ -1253,23 +1089,6 @@ const StudentList = () => {
 
         y += 10;
       };
-
-      // const addHeader = () => {
-      //   doc.setFont('helvetica', 'bold');
-      // doc.setFontSize(16);
-      // doc.text('Educational Consultancy Application', 105, 20, { align: 'center' });
-
-      // // Subtitle
-      // doc.setFontSize(11);
-      // doc.setFont('helvetica', 'normal');
-      // doc.text('Academic Year: 2025-26', 105, 28, { align: 'center' });
-
-      // // Horizontal line
-      // doc.setLineWidth(0.5);
-      // doc.line(10, 32, 200, 32)
-
-      // y += 20;
-      // }
 
       // Dynamic field height calculator
       const calculateFieldHeight = (text, maxWidth) => {
@@ -1463,12 +1282,38 @@ const StudentList = () => {
                 </option>
               ))}
             </select>
-            {(statusFilter || collegeFilter || searchTerm) && (
+            {/* <select
+              className="filter-select"
+              value={courseFilter}
+              onChange={(e) => setCourseFilter(e.target.value)}
+            >
+              <option value="">All Courses</option>
+              {courseOptions.map((course) => (
+                <option key={course} value={course}>
+                  {course}
+                </option>
+              ))}
+            </select> */}
+            <select
+              className="filter-select"
+              value={referenceFilter}
+              onChange={(e) => setReferenceFilter(e.target.value)}
+            >
+              <option value="">All References</option>
+              {referenceOptions.map((reference) => (
+                <option key={reference} value={reference}>
+                  {reference}
+                </option>
+              ))}
+            </select>
+            {(statusFilter || collegeFilter || searchTerm || referenceFilter || courseFilter) && (
               <button
                 className="button button--outline"
                 onClick={() => {
                   setStatusFilter('');
                   setCollegeFilter('');
+                  setReferenceFilter('');
+                  setCourseFilter('');
                   setSearchTerm('');
                 }}
                 style={{ marginLeft: 'auto' }}
